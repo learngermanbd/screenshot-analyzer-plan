@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 function createMockAnalysis(buffer: ArrayBuffer, file: File, imageUrl: string | null): AnalysisResult {
   return {
     id: generateId(),
-    imageUrl: imageUrl || `data:${file.type};base64,${Buffer.from(buffer).toString("base64").slice(0, 100)}`,
+    imageUrl: imageUrl || `/placeholder-screenshot.png`,
     imageWidth: 390,
     imageHeight: 844,
     elements: [

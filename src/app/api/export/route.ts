@@ -19,10 +19,19 @@ export async function POST(request: NextRequest) {
           id: "screen-1",
           name: "Main",
           nodes: body.nodes.map(
-            (n: { id: string; type: string; props: Record<string, unknown> }) => ({
+            (n: {
+              id: string;
+              type: string;
+              x: number;
+              y: number;
+              width: number;
+              height: number;
+              props: Record<string, unknown>;
+              style: Record<string, unknown>;
+            }) => ({
               id: n.id,
               type: n.type,
-              props: n.props,
+              props: { ...n.props, x: n.x, y: n.y, width: n.width, height: n.height, style: n.style },
               children: [],
               displayName: n.type,
             })

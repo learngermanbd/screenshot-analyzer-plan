@@ -183,7 +183,7 @@ ${nodes.map((n) => `  <div style="position:absolute;left:${n.x}px;top:${n.y}px;w
             onRedo={handleRedo}
             zoom={zoom}
             onZoomChange={setZoom}
-            onExport={() => handleExport("react-tailwind")}
+            onExport={() => handleExport(exportFormat)}
             onPrototype={() => window.location.href = "/prototype"}
           />
         </div>
