@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Mobile Screenshot Analyzer - Full Project Plan</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e1a;--s:#111827;--s2:#1a2236;--b:#1e293b;--t:#e2e8f0;--td:#94a3b8;--a:#6366f1;--g:#10b981;--y:#f59e0b;--r:#ef4444;--bl:#3b82f6;--p:#a855f7;--pk:#ec4899;--c:#06b6d4;--r2:12px}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t);line-height:1.7}
+.hero{padding:80px 24px 60px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(99,102,241,.15) 0%,transparent 60%)}
+.badge{display:inline-block;padding:6px 18px;border-radius:999px;background:rgba(99,102,241,.25);border:1px solid var(--a);color:var(--a);font-size:.8rem;font-weight:600;text-transform:uppercase;margin-bottom:20px}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;background:linear-gradient(135deg,#fff 30%,var(--a) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
+.hero p{max-width:720px;margin:0 auto;color:var(--td);font-size:1.1rem}
+.toc{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--b);padding:0 24px;overflow-x:auto;white-space:nowrap}
+.toc a{display:inline-block;padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--td);text-decoration:none}
+.toc a:hover{color:var(--t);background:var(--s2)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:60px 0;border-top:1px solid var(--b)}
+.tag{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+h2{font-size:1.8rem;font-weight:800;margin-bottom:8px;color:#fff}
+h3{font-size:1.15rem;font-weight:700;margin:28px 0 12px;color:#fff}
+.sub{color:var(--td);font-size:1rem;max-width:720px;margin-bottom:28px}
+.cd{background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:24px;transition:border-color .2s}
+.cd:hover{border-color:rgba(99,102,241,.4)}
+.g{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.cd h4{font-weight:700;font-size:1rem;margin-bottom:8px;color:var(--t)}
+.cd p,.cd li{color:var(--td);font-size:.88rem}
+.cd ul{list-style:none;padding:0}
+.cd ul li{padding:3px 0 3px 16px;position:relative}
+.cd ul li::before{content:"\203A";position:absolute;left:0;color:var(--a);font-weight:700}
+.tf{background:rgba(16,185,129,.15);color:var(--g);border:1px solid rgba(16,185,129,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.tw{background:rgba(245,158,11,.15);color:var(--y);border:1px solid rgba(245,158,11,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.ti{background:rgba(59,130,246,.15);color:var(--bl);border:1px solid rgba(59,130,246,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.tm{background:rgba(99,102,241,.2);color:var(--a);border:1px solid rgba(99,102,241,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.tp2{background:rgba(168,85,247,.15);color:var(--p);border:1px solid rgba(168,85,247,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.tp3{background:rgba(236,72,153,.15);color:var(--pk);border:1px solid rgba(236,72,153,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.tm2{background:rgba(16,185,129,.15);color:var(--g);border:1px solid rgba(16,185,129,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+.ta{background:rgba(6,182,212,.15);color:var(--c);border:1px solid rgba(6,182,212,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+.tag-ag{background:rgba(239,68,68,.15);color:var(--r);border:1px solid rgba(239,68,68,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+.tb{background:rgba(59,130,246,.15);color:var(--bl);border:1px solid rgba(59,130,246,.3);padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+.tw2{overflow-x:auto;margin:16px 0;border-radius:var(--r2);border:1px solid var(--b)}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+thead{background:var(--s2)}
+th{padding:10px 14px;text-align:left;font-weight:700;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--td);border-bottom:1px solid var(--b)}
+td{padding:10px 14px;border-bottom:1px solid var(--b);color:var(--td);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(99,102,241,.03)}
+td:first-child{font-weight:600;color:var(--t)}
+.hr td{background:rgba(16,185,129,.05)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:24px 0}
+.stat{background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:24px;text-align:center}
+.stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--g),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat .lbl{font-size:.78rem;color:var(--td);margin-top:4px}
+.pp{display:flex;flex-wrap:wrap;gap:0;margin:24px 0}
+.ps{flex:1 1 120px;background:var(--s);border:1px solid var(--b);padding:14px;text-align:center;position:relative;min-width:100px}
+.ps:first-child{border-radius:var(--r2) 0 0 var(--r2)}
+.ps:last-child{border-radius:0 var(--r2) var(--r2) 0}
+.ps:not(:last-child)::after{content:"\2192";position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--a);z-index:2;font-weight:700}
+.ps .name{font-weight:700;font-size:.78rem;color:var(--t)}
+.ps .det{font-size:.68rem;color:var(--td)}
+.num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:rgba(99,102,241,.2);border:1px solid var(--a);font-weight:800;font-size:.75rem;color:var(--a);margin-right:10px;flex-shrink:0}
+.step{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--b);align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step .st{font-weight:700;font-size:.88rem;margin-bottom:2px}
+.step .sd2{color:var(--td);font-size:.83rem}
+.build{display:flex;gap:16px;padding:16px 0;border-left:2px solid var(--b);padding-left:18px;margin-left:10px;position:relative}
+.build::before{content:"";position:absolute;left:-5px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--a);border:2px solid var(--bg)}
+.build .bn{font-size:1.4rem;font-weight:800;color:var(--a);line-height:1;flex-shrink:0}
+.build .bt{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.build .bd{color:var(--td);font-size:.85rem}
+.alert{border-radius:var(--r2);padding:12px 16px;margin:14px 0;font-size:.85rem}
+.alert-y{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--y)}
+.alert-g{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);color:var(--g)}
+.tree{font-family:Consolas,monospace;font-size:.75rem;line-height:1.6;background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:18px;overflow-x:auto;color:var(--td)}
+.tree .d{color:var(--a);font-weight:600}
+.tree .cm{color:#475569;font-style:italic}
+.tree .new{color:var(--g)}
+a{color:var(--a);text-decoration:none}
+a:hover{text-decoration:underline}
+footer{padding:32px 24px;text-align:center;color:var(--td);font-size:.82rem;border-top:1px solid var(--b);margin-top:32px}
+.win{background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:18px;font-family:Consolas,monospace;font-size:.78rem;line-height:1.5;overflow-x:auto;white-space:pre;color:var(--td);margin:12px 0}
+.win .kw{color:var(--p)}.win .fn{color:var(--c)}.win .str{color:var(--g)}.win .cm2{color:#475569}
+@media(max-width:768px){.hero{padding:48px 16px 40px}section{padding:40px 0}.pp{flex-direction:column}.ps{border-radius:var(--r2)!important}.ps:not(:last-child)::after{content:"\2193";right:50%;bottom:-10px;top:auto;transform:translateX(50%)}.ps:not(:last-child){margin-bottom:12px}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<div class="badge">Full Project Plan &amp; Research Document</div>
+<h1>Mobile Screenshot Analyzer &amp; Design Builder</h1>
+<p>Upload a screenshot &rarr; extract measurements, colors, specs &rarr; edit in drag-and-drop builder &rarr; export production code for <strong>Web</strong>, <strong>Android</strong>, and <strong>iOS</strong> &mdash; built with <strong>100% free</strong> resources.</p>
+</div>
+
+<nav class="toc">
+<a href="#overview">Overview</a> <a href="#arch">Architecture</a> <a href="#feat">Features</a> <a href="#builder">Builder</a> <a href="#prototype">Prototype</a> <a href="#inspect">Inspect</a> <a href="#export">Code Export</a> <a href="#pipe">Pipeline</a> <a href="#stack">Tech Stack</a> <a href="#ai">AI Vision</a> <a href="#host">Hosting</a> <a href="#db">Database</a> <a href="#cv">CV &amp; OCR</a> <a href="#free">Free Services</a> <a href="#lic">Licensing</a> <a href="#struct">Structure</a> <a href="#build">Build Order</a> <a href="#cost">Cost</a> <a href="#ref">References</a>
+</nav>
+
+<!-- OVERVIEW -->
+<section id="overview"><div class="wrap">
+<div class="tag">Section 01</div>
+<h2>Project Overview</h2>
+<p class="sub">A complete mobile app design tool: analyze screenshots, build/edit designs with drag-and-drop, create interactive prototypes, inspect specs, and export production code for web and Android.</p>
+<div class="stats">
+<div class="stat"><div class="val">$0</div><div class="lbl">Monthly Cost</div></div>
+<div class="stat"><div class="val">1,500</div><div class="lbl">Free AI Calls/Day</div></div>
+<div class="stat"><div class="val">100%</div><div class="lbl">Free Tier Stack</div></div>
+<div class="stat"><div class="val">6+</div><div class="lbl">Export Formats</div></div>
+<div class="stat"><div class="val">3</div><div class="lbl">Modes: Analyze, Build, Prototype</div></div>
+</div>
+<div class="alert alert-g"><strong>Goal:</strong> Build a Visily-like tool that's 100% free, open-source, and includes features Visily doesn't have: deep screenshot analysis, multi-target code export (Android/iOS), and offline AI via Ollama.</div>
+</div></section>
+
+<!-- ARCHITECTURE -->
+<section id="arch"><div class="wrap">
+<div class="tag">Section 02</div>
+<h2>System Architecture</h2>
+<p class="sub">Three-stage pipeline: Analyze &rarr; Build &rarr; Export. Two backend services (Next.js + Python ML), shared via JSON.</p>
+
+<div class="g g2">
+<div class="cd"><h4>Stage 1: Analysis (Konva Canvas)</h4><ul>
+<li>Upload screenshot &rarr; AI detects elements</li>
+<li>Measurement overlays on image</li>
+<li>Color palette, font specs, spacing extraction</li>
+<li>Output: structured JSON of all detected elements</li>
+</ul></div>
+<div class="cd"><h4>Stage 2: Design Builder (Craft.js Canvas)</h4><ul>
+<li>Auto-populate from AI detection OR manual build</li>
+<li>Grid mode (quick layout) + Free-form mode (pixel-perfect)</li>
+<li>Component library with categories &amp; search</li>
+<li>Property editor for all element styles</li>
+<li>Multi-screen support with navigation flow</li>
+</ul></div>
+<div class="cd"><h4>Stage 3: Prototype &amp; Inspect</h4><ul>
+<li>Prototype mode: click interactions, transitions, phone preview</li>
+<li>Inspect mode: CSS, React, Android, iOS code for any element</li>
+<li>Layer tree: view hierarchy, reorder, lock, hide</li>
+<li>Share public prototype URLs</li>
+</ul></div>
+<div class="cd"><h4>Stage 4: Code Export</h4><ul>
+<li>React + Tailwind (Gemini API)</li>
+<li>Vue + Tailwind (Gemini API)</li>
+<li>HTML + CSS (client-side)</li>
+<li>Jetpack Compose (Gemini API)</li>
+<li>Kotlin/XML Layout (Gemini API)</li>
+<li>JSON design file + PNG/SVG (client-side)</li>
+<li>Live preview in Sandpack iframe</li>
+</ul></div>
+</div>
+</div></section>
+
+<!-- FEATURES -->
+<section id="feat"><div class="wrap">
+<div class="tag">Section 03</div>
+<h2>Complete Feature List</h2>
+
+<h3>Phase 1 &mdash; Core MVP <span class="tm">MVP</span></h3>
+<div class="cd" style="padding:8px 20px">
+<div class="step"><div class="num">1</div><div><div class="st">Screenshot Upload</div><div class="sd2">Drag &amp; drop, clipboard paste, file picker. PNG/JPG/WebP up to 10MB.</div></div></div>
+<div class="step"><div class="num">2</div><div><div class="st">Auto Element Detection</div><div class="sd2">AI identifies buttons, inputs, text, images, icons, cards, navbars with bounding boxes.</div></div></div>
+<div class="step"><div class="num">3</div><div><div class="st">Interactive Measurement Canvas</div><div class="sd2">Point-to-point ruler, element spacing lines, zoom/pan, pixel-to-dp conversion.</div></div></div>
+<div class="step"><div class="num">4</div><div><div class="st">Color Palette Extraction</div><div class="sd2">5-8 dominant colors via K-Means with hex/RGB/HSL. Click-to-copy.</div></div></div>
+<div class="step"><div class="num">5</div><div><div class="st">Design Spec Panel</div><div class="sd2">Font size, border radius, shadows, padding/margins per element.</div></div></div>
+<div class="step"><div class="num">6</div><div><div class="st">Component Info Cards</div><div class="sd2">Hover any element to see type, dimensions, spacing, colors.</div></div></div>
+<div class="step"><div class="num">7</div><div><div class="st">Export &mdash; Annotated Image</div><div class="sd2">Download screenshot with all overlays as PNG.</div></div></div>
+<div class="step"><div class="num">8</div><div><div class="st">Export &mdash; JSON Spec Sheet</div><div class="sd2">Structured JSON with all design tokens.</div></div></div>
+</div>
+
+<h3>Phase 2 &mdash; Design Builder &amp; Prototype <span class="tp2">Phase 2</span></h3>
+<div class="cd" style="padding:8px 20px">
+<div class="step"><div class="num">9</div><div><div class="st">Craft.js Design Canvas</div><div class="sd2">Dual-mode: Grid layout (quick prototyping) + Free-form canvas (pixel-perfect positioning).</div></div></div>
+<div class="step"><div class="num">10</div><div><div class="st">Component Library</div><div class="sd2">Categorized mobile UI components (buttons, inputs, cards, navbars, modals, lists) with search + AI-detected components from your screenshot.</div></div></div>
+<div class="step"><div class="num">11</div><div><div class="st">Property Editor</div><div class="sd2">Right panel to edit colors, fonts, spacing, borders, shadows, opacity for any element.</div></div></div>
+<div class="step"><div class="num">12</div><div><div class="st">Auto-populate from Screenshot</div><div class="sd2">AI detection results automatically placed as editable components on the canvas.</div></div></div>
+<div class="step"><div class="num">13</div><div><div class="st">Prototype Mode</div><div class="sd2">Click-based interactions, screen transitions (slide/fade/dissolve), phone preview, shareable prototype URLs.</div></div></div>
+<div class="step"><div class="num">14</div><div><div class="st">Inspect Mode</div><div class="sd2">Select any element to see properties + code for multiple targets: CSS, React, Vue, Jetpack Compose, Kotlin/XML.</div></div></div>
+<div class="step"><div class="num">15</div><div><div class="st">Multi-screen Support</div><div class="sd2">Screen tabs, navigation flow between screens, consistent theming across screens.</div></div></div>
+<div class="step"><div class="num">16</div><div><div class="st">Layer Tree</div><div class="sd2">Component hierarchy view. Reorder, lock, hide, group elements.</div></div></div>
+<div class="step"><div class="num">17</div><div><div class="st">Wireframe Generator</div><div class="sd2">Toggle between design view and clean wireframe (grayscale shapes).</div></div></div>
+</div>
+
+<h3>Phase 3 &mdash; Code Export &amp; Advanced <span class="tp3">Phase 3</span></h3>
+<div class="cd" style="padding:8px 20px">
+<div class="step"><div class="num">18</div><div><div class="st">React + Tailwind Export</div><div class="sd2">Clean, responsive React components via Gemini API. Download or copy.</div></div></div>
+<div class="step"><div class="num">19</div><div><div class="st">Vue + Tailwind Export</div><div class="sd2">Vue 3 composition API components via Gemini API.</div></div></div>
+<div class="step"><div class="num">20</div><div><div class="st">HTML + CSS Export</div><div class="sd2">Plain HTML/CSS generated client-side (zero API cost).</div></div></div>
+<div class="step"><div class="num">21</div><div><div class="st">Jetpack Compose Export</div><div class="sd2">Kotlin Compose code via Gemini API. Row/Column/Box layout mapping.</div></div></div>
+<div class="step"><div class="num">22</div><div><div class="st">Kotlin/XML Layout Export</div><div class="sd2">Traditional Android XML layouts via Gemini API.</div></div></div>
+<div class="step"><div class="num">23</div><div><div class="st">Live Code Preview</div><div class="sd2">Sandpack iframe showing generated code running in real-time.</div></div></div>
+<div class="step"><div class="num">24</div><div><div class="st">Accessibility Audit</div><div class="sd2">Contrast ratios, touch targets, text readability scores.</div></div></div>
+<div class="step"><div class="num">25</div><div><div class="st">API Access</div><div class="sd2">REST API for developers to integrate analysis into tools/CI-CD.</div></div></div>
+</div>
+</div></section>
+
+<!-- DESIGN BUILDER -->
+<section id="builder"><div class="wrap">
+<div class="tag">Section 04</div>
+<h2>Design Builder &mdash; Drag &amp; Drop Canvas</h2>
+<p class="sub">Craft.js-powered canvas with dual modes. Auto-populated from AI analysis or built manually from component library.</p>
+
+<h3>Canvas Modes</h3>
+<div class="g g2">
+<div class="cd" style="border-color:var(--a)"><h4>Grid Mode (Quick Prototyping)</h4><ul>
+<li>Elements snap to flex/grid containers</li>
+<li>Responsive by default</li>
+<li>Stack-based layout (rows, columns, grids)</li>
+<li>Best for: quick wireframes, content-heavy screens</li>
+</ul></div>
+<div class="cd" style="border-color:var(--p)"><h4>Free-form Mode (Pixel-Perfect)</h4><ul>
+<li>Absolute positioning anywhere on canvas</li>
+<li>Resize handles on all elements</li>
+<li>Snap-to-grid guide lines</li>
+<li>Best for: precise mobile UI design, matching screenshots</li>
+</ul></div>
+</div>
+
+<h3>Component Library</h3>
+<div class="g g4">
+<div class="cd"><h4>Mobile Components</h4><ul><li>Button (primary, secondary, outline)</li><li>Text Input / Search Bar</li><li>Card / List Item</li><li>Navigation Bar / Tab Bar</li><li>Modal / Bottom Sheet</li><li>Toggle / Checkbox / Radio</li><li>Slider / Progress Bar</li><li>Avatar / Badge / Chip</li></ul></div>
+<div class="cd"><h4>Layout</h4><ul><li>Row / Column / Grid</li><li>Container / Spacer</li><li>Scroll View</li><li>Safe Area</li><li>Divider</li></ul></div>
+<div class="cd"><h4>Text &amp; Media</h4><ul><li>Title / Heading</li><li>Body Text / Caption</li><li>Icon (built-in set)</li><li>Image Placeholder</li><li>Map Placeholder</li></ul></div>
+<div class="cd"><h4>From Screenshot (AI)</h4><ul><li>Auto-detected buttons with labels</li><li>Auto-detected input fields</li><li>Auto-detected text blocks</li><li>Auto-detected images/icons</li><li>Auto-detected navigation bars</li></ul></div>
+</div>
+</div></section>
+
+<!-- PROTOTYPE MODE -->
+<section id="prototype"><div class="wrap">
+<div class="tag">Section 05</div>
+<h2>Prototype Mode</h2>
+<p class="sub">Create interactive clickable prototypes. Share with stakeholders for feedback.</p>
+
+<div class="g g2">
+<div class="cd"><h4>Interactions</h4><ul>
+<li>Click/tap on any element &rarr; navigate to screen</li>
+<li>Trigger types: click, long-press, swipe</li>
+<li>Actions: navigate, open URL, show/hide element, toggle state</li>
+</ul></div>
+<div class="cd"><h4>Transitions</h4><ul>
+<li>Slide (left, right, up, down)</li>
+<li>Fade / Dissolve</li>
+<li>Zoom / Scale</li>
+<li>Custom duration (100ms &ndash; 1000ms)</li>
+</ul></div>
+<div class="cd"><h4>Preview</h4><ul>
+<li>Full-screen phone frame preview (iPhone / Android)</li>
+<li>Click through entire app flow</li>
+<li>Real-time interaction testing</li>
+</ul></div>
+<div class="cd"><h4>Sharing</h4><ul>
+<li>Generate public prototype URL</li>
+<li>No login required for viewers</li>
+<li>QR code for mobile testing</li>
+<li>Expiring links for security</li>
+</ul></div>
+</div>
+</div></section>
+
+<!-- INSPECT MODE -->
+<section id="inspect"><div class="wrap">
+<div class="tag">Section 06</div>
+<h2>Inspect Mode</h2>
+<p class="sub">Developer handoff mode. Select any element to see exact specs and code for multiple platforms.</p>
+
+<div class="cd">
+<h4>When you select an element, Inspect Mode shows:</h4>
+<div class="g g3" style="margin-top:12px">
+<div><h4 style="color:var(--t)">Properties</h4><ul>
+<li>Element type (Button, Input, Card, etc.)</li>
+<li>Exact dimensions (width &times; height)</li>
+<li>Position (x, y coordinates)</li>
+</ul></div>
+<div><h4 style="color:var(--t)">Design Specs</h4><ul>
+<li>Colors: background, text, border (hex/RGB)</li>
+<li>Typography: font family, size, weight, line-height</li>
+<li>Spacing: padding, margins (all sides)</li>
+<li>Border: radius, width, style</li>
+<li>Shadow: offset, blur, color</li>
+<li>Opacity</li>
+</ul></div>
+<div><h4 style="color:var(--t)">Code (Multi-target)</h4><ul>
+<li>CSS / Tailwind classes</li>
+<li>React JSX component</li>
+<li>Vue template</li>
+<li>Jetpack Compose Kotlin</li>
+<li>Kotlin/XML Layout</li>
+<li>Copy any code snippet</li>
+</ul></div>
+</div>
+</div>
+</div></section>
+
+<!-- CODE EXPORT -->
+<section id="export"><div class="wrap">
+<div class="tag">Section 07</div>
+<h2>Code Export &mdash; Multi-Platform</h2>
+<p class="sub">Export your design as production-ready code for web and mobile platforms.</p>
+
+<div class="tw2"><table>
+<thead><tr><th>Format</th><th>Target</th><th>Method</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td>React + Tailwind</td><td>Web</td><td>Gemini API</td><td>JSX components with Tailwind utility classes</td></tr>
+<tr><td>Vue + Tailwind</td><td>Web</td><td>Gemini API</td><td>Vue 3 Composition API with Tailwind</td></tr>
+<tr><td>HTML + CSS</td><td>Web</td><td>Client-side</td><td>Plain HTML + CSS (zero API cost)</td></tr>
+<tr><td>Jetpack Compose</td><td>Android</td><td>Gemini API</td><td>Kotlin @Composable with Row/Column/Box</td></tr>
+<tr><td>Kotlin/XML</td><td>Android</td><td>Gemini API</td><td>XML layouts with ConstraintLayout/LinearLayout</td></tr>
+<tr><td>JSON Design File</td><td>Re-import</td><td>Client-side</td><td>Craft.js state JSON for re-import</td></tr>
+<tr><td>PNG / SVG</td><td>Sharing</td><td>Client-side</td><td>Screenshot or vector export</td></tr>
+</tbody></table></div>
+
+<h3>Export Code Examples</h3>
+<div class="g g2">
+<div class="cd"><h4>React + Tailwind</h4>
+<div class="win"><span class="kw">export default function</span> <span class="fn">LoginScreen</span>() {
+  <span class="kw">return</span> (
+    &lt;<span class="fn">div</span> <span class="kw">className</span>=<span class="str">"min-h-screen bg-white p-4"</span>&gt;
+      &lt;<span class="fn">h1</span> <span class="kw">className</span>=<span class="str">"text-2xl font-bold mb-6"</span>&gt;Login&lt;/<span class="fn">h1</span>&gt;
+      &lt;<span class="fn">input</span> <span class="kw">className</span>=<span class="str">"w-full border rounded-lg p-3 mb-3"</span>
+             <span class="kw">placeholder</span>=<span class="str">"Email"</span> /&gt;
+      &lt;<span class="fn">button</span> <span class="kw">className</span>=<span class="str">"w-full bg-blue-500 text-white py-3 rounded-lg"</span>&gt;
+        Sign In
+      &lt;/<span class="fn">button</span>&gt;
+    &lt;/<span class="fn">div</span>&gt;
+  )
+}</div></div>
+<div class="cd"><h4>Jetpack Compose</h4>
+<div class="win"><span class="kw">@Composable</span>
+<span class="kw">fun</span> <span class="fn">LoginScreen</span>() {
+    <span class="fn">Column</span>(
+        <span class="kw">modifier</span> = Modifier
+            .<span class="fn">fillMaxSize</span>()
+            .<span class="fn">padding</span>(16.dp)
+    ) {
+        <span class="fn">Text</span>(<span class="str">"Login"</span>,
+            <span class="kw">fontSize</span> = 24.sp,
+            <span class="kw">fontWeight</span> = FontWeight.Bold)
+        <span class="fn">Spacer</span>(Modifier.<span class="fn">height</span>(24.dp))
+        <span class="fn">TextField</span>(<span class="kw">value</span> = <span class="str">""</span>,
+            <span class="kw">onValueChange</span> = {},
+            <span class="kw">label</span> = { <span class="fn">Text</span>(<span class="str">"Email"</span>) },
+            <span class="kw">modifier</span> = Modifier.<span class="fn">fillMaxWidth</span>())
+        <span class="fn">Spacer</span>(Modifier.<span class="fn">height</span>(12.dp))
+        <span class="fn">Button</span>(<span class="kw">onClick</span> = {},
+            <span class="kw">modifier</span> = Modifier.<span class="fn">fillMaxWidth</span>()) {
+            <span class="fn">Text</span>(<span class="str">"Sign In"</span>)
+        }
+    }
+}</div></div>
+</div>
+</div></section>
+
+<!-- PIPELINE -->
+<section id="pipe"><div class="wrap">
+<div class="tag">Section 08</div>
+<h2>Analysis Pipeline</h2>
+<div class="pp">
+<div class="ps"><div class="name">Upload</div><div class="det">Image + hash</div></div>
+<div class="ps"><div class="name">OpenCV</div><div class="det">Resize, edges</div></div>
+<div class="ps"><div class="name">PaddleOCR</div><div class="det">Text extract</div></div>
+<div class="ps"><div class="name">K-Means</div><div class="det">Colors</div></div>
+<div class="ps"><div class="name">Florence-2</div><div class="det">UI elements</div></div>
+<div class="ps"><div class="name">Gemini</div><div class="det">Semantics</div></div>
+<div class="ps"><div class="name">Builder</div><div class="det">Auto-populate</div></div>
+</div>
+
+<div class="g g3">
+<div class="cd"><h4>Stage 1 &mdash; Preprocessing</h4><ul><li>Resize, enhance contrast (CLAHE)</li><li>Grayscale conversion</li></ul></div>
+<div class="cd"><h4>Stage 2 &mdash; Text (PaddleOCR)</h4><ul><li>OCR with bounding boxes</li><li>Font size estimation</li></ul></div>
+<div class="cd"><h4>Stage 3 &mdash; Colors (K-Means)</h4><ul><li>5-8 dominant colors</li><li>Per-element color mapping</li></ul></div>
+<div class="cd"><h4>Stage 4 &mdash; Detection (Florence-2)</h4><ul><li>UI element bounding boxes</li><li>Component classification</li></ul></div>
+<div class="cd"><h4>Stage 5 &mdash; Semantics (Gemini)</h4><ul><li>Hierarchy, layout type</li><li>CSS property estimation</li></ul></div>
+<div class="cd"><h4>Stage 6 &mdash; Auto-populate</h4><ul><li>JSON &rarr; Craft.js nodes</li><li>Place on canvas with positions</li></ul></div>
+</div>
+</div></section>
+
+<!-- TECH STACK -->
+<section id="stack"><div class="wrap">
+<div class="tag">Section 09</div>
+<h2>Complete Tech Stack</h2>
+<div class="tw2"><table>
+<thead><tr><th>Layer</th><th>Tool</th><th>Cost</th><th>License</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Frontend</td><td>Next.js 14</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>SSR, API routes, best DX</td></tr>
+<tr><td>UI</td><td>shadcn/ui + Tailwind</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>Beautiful components</td></tr>
+<tr><td>Canvas (Analysis)</td><td>react-konva</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>Measurement overlays on images</td></tr>
+<tr><td>Canvas (Builder)</td><td>Craft.js</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>Drag-drop design builder</td></tr>
+<tr><td>Code Preview</td><td>Sandpack</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>Live iframe code preview</td></tr>
+<tr><td>Animation</td><td>Framer Motion</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>Smooth transitions</td></tr>
+<tr><td>ML Service</td><td>FastAPI (Python)</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>ML pipeline</td></tr>
+<tr><td>AI Vision</td><td>Gemini 2.0 Flash</td><td><span class="tf">Free</span></td><td>Google ToS</td><td>1,500 req/day</td></tr>
+<tr><td>AI Fallback</td><td>Ollama + Qwen2.5-VL</td><td><span class="tf">Free</span></td><td><span class="ta">Apache 2.0</span></td><td>Unlimited local</td></tr>
+<tr><td>OCR</td><td>PaddleOCR</td><td><span class="tf">Free</span></td><td><span class="ta">Apache 2.0</span></td><td>Best quality OCR</td></tr>
+<tr><td>Detection</td><td>Florence-2</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>UI element bounding boxes</td></tr>
+<tr><td>CV</td><td>OpenCV + scikit-learn</td><td><span class="tf">Free</span></td><td><span class="tb">BSD</span></td><td>Image processing + colors</td></tr>
+<tr><td>Database</td><td>Supabase PostgreSQL</td><td><span class="tf">Free</span></td><td>Supabase ToS</td><td>500MB + Auth + Storage</td></tr>
+<tr><td>Storage</td><td>Cloudflare R2</td><td><span class="tf">Free</span></td><td>CF ToS</td><td>10GB, $0 egress</td></tr>
+<tr><td>Cache</td><td>Upstash Redis</td><td><span class="tf">Free</span></td><td>Upstash ToS</td><td>500K cmds/month</td></tr>
+<tr><td>Auth</td><td>NextAuth.js</td><td><span class="tf">Free</span></td><td><span class="tm2">MIT</span></td><td>Self-hosted</td></tr>
+<tr><td>Hosting</td><td>Vercel + HF Spaces</td><td><span class="tf">Free</span></td><td>ToS</td><td>Frontend + ML service</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- AI -->
+<section id="ai"><div class="wrap">
+<div class="tag">Section 10</div>
+<h2>AI Vision Strategy</h2>
+<div class="g g3">
+<div class="cd" style="border-color:var(--g)"><h4>Primary: Gemini 2.0 Flash</h4><p>1,500 free req/day. Native JSON output. Used for: screenshot analysis, code export (React, Vue, Android), hierarchy detection.</p></div>
+<div class="cd"><h4>Fallback: Ollama + Qwen2.5-VL</h4><p>Unlimited, local, private. For offline use or when Gemini quota is exhausted.</p></div>
+<div class="cd"><h4>Detection: Florence-2</h4><p>Purpose-built bounding box detection. Runs locally. MIT licensed.</p></div>
+</div>
+<div class="alert alert-y"><strong>API Optimization:</strong> Each analysis = 1 Gemini call. Each code export = 1 call. Cache exports by design hash. HTML/CSS export is client-side (0 calls). Max ~3,000 analyses+exports/day.</div>
+</div></section>
+
+<!-- HOSTING -->
+<section id="host"><div class="wrap">
+<div class="tag">Section 11</div>
+<h2>Hosting (All Free)</h2>
+<div class="g g2">
+<div class="cd"><h4>Frontend: Vercel Hobby</h4><p>100GB bandwidth, *.vercel.app subdomain, auto-SSL.</p></div>
+<div class="cd"><h4>ML Service: Hugging Face Spaces</h4><p>16GB RAM, 2 vCPU. Handles OpenCV + PaddleOCR + Florence-2.</p></div>
+<div class="cd"><h4>Database: Supabase Free</h4><p>500MB PostgreSQL + 1GB file storage + Auth.</p></div>
+<div class="cd"><h4>Storage: Cloudflare R2</h4><p>10GB free, $0 egress, S3-compatible.</p></div>
+</div>
+</div></section>
+
+<!-- DB -->
+<section id="db"><div class="wrap">
+<div class="tag">Section 12</div>
+<h2>Database &amp; Storage</h2>
+<div class="tw2"><table>
+<thead><tr><th>Service</th><th>Type</th><th>Free Limit</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>Supabase</td><td>PostgreSQL</td><td>500MB DB + 1GB files</td><td>Projects, analyses, user data</td></tr>
+<tr><td>Cloudflare R2</td><td>Object Storage</td><td>10GB, $0 egress</td><td>Uploaded screenshots</td></tr>
+<tr><td>Upstash Redis</td><td>Cache</td><td>500K cmds/month</td><td>Analysis result caching</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- CV -->
+<section id="cv"><div class="wrap">
+<div class="tag">Section 13</div>
+<h2>Computer Vision &amp; OCR</h2>
+<div class="tw2"><table>
+<thead><tr><th>Tool</th><th>Purpose</th><th>License</th></tr></thead>
+<tbody>
+<tr><td>PaddleOCR</td><td>Text extraction (best quality)</td><td><span class="ta">Apache 2.0</span></td></tr>
+<tr><td>Florence-2</td><td>UI element bounding boxes</td><td><span class="tm2">MIT</span></td></tr>
+<tr><td>OpenCV</td><td>Edge detection, preprocessing</td><td><span class="tb">BSD</span></td></tr>
+<tr><td>scikit-learn</td><td>K-Means color extraction</td><td><span class="tb">BSD</span></td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- FREE -->
+<section id="free"><div class="wrap">
+<div class="tag">Section 14</div>
+<h2>Free Supporting Services</h2>
+<div class="tw2"><table>
+<thead><tr><th>Category</th><th>Service</th><th>Free Limit</th></tr></thead>
+<tbody>
+<tr><td>Auth</td><td>Supabase Auth / NextAuth</td><td>50K MAUs / Unlimited</td></tr>
+<tr><td>Email</td><td>Resend</td><td>100/day, 3K/month</td></tr>
+<tr><td>Analytics</td><td>Umami (self-hosted)</td><td>Unlimited</td></tr>
+<tr><td>Errors</td><td>Sentry</td><td>5K errors/month</td></tr>
+<tr><td>CDN</td><td>Cloudflare</td><td>Unmetered</td></tr>
+<tr><td>SSL</td><td>Vercel/CF auto-SSL</td><td>Unlimited</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- LICENSING -->
+<section id="lic"><div class="wrap">
+<div class="tag">Section 15</div>
+<h2>License Analysis</h2>
+<div class="g g3">
+<div class="cd" style="border-color:var(--g)"><h4>Safe (MIT/BSD/Apache)</h4><ul>
+<li>Next.js, Craft.js, react-konva &mdash; <span class="tm2">MIT</span></li>
+<li>Florence-2, Framer Motion &mdash; <span class="tm2">MIT</span></li>
+<li>OpenCV, scikit-learn &mdash; <span class="tb">BSD</span></li>
+<li>PaddleOCR, FastAPI, Prisma &mdash; <span class="ta">Apache 2.0</span></li>
+</ul></div>
+<div class="cd" style="border-color:var(--y)"><h4>Caution (AGPL)</h4><ul>
+<li>OmniParser &mdash; <span class="tag-ag">AGPL mixed</span></li>
+<li>YOLOv8/v11 &mdash; <span class="tag-ag">AGPL-3.0</span></li>
+</ul><p style="margin-top:8px">Use Florence-2 (MIT) instead.</p></div>
+<div class="cd" style="border-color:var(--bl)"><h4>Service Terms</h4><ul>
+<li>Gemini free tier: data may train models</li>
+<li>Vercel Hobby: non-commercial</li>
+<li>Upgrade when monetizing</li>
+</ul></div>
+</div>
+</div></section>
+
+<!-- STRUCTURE -->
+<section id="struct"><div class="wrap">
+<div class="tag">Section 16</div>
+<h2>Project Structure</h2>
+<div class="tree"><span class="d">screenshot-analyzer/</span>
++-- <span class="d">src/</span>
+|   +-- <span class="d">app/</span>                       <span class="cm"># Next.js App Router</span>
+|   |   +-- page.tsx               <span class="cm"># Home / upload</span>
+|   |   +-- <span class="d">analyze/</span> page.tsx      <span class="cm"># Analysis results</span>
+|   |   +-- <span class="d">builder/</span> page.tsx      <span class="cm"># Design builder</span>
+|   |   +-- <span class="d">prototype/</span> page.tsx    <span class="cm"># Prototype preview</span>
+|   |   +-- <span class="d">api/</span>
+|   |       +-- <span class="d">analyze/</span> route.ts <span class="cm"># Analysis endpoint</span>
+|   |       +-- <span class="d">export/</span> route.ts  <span class="cm"># Code export endpoint</span>
+|   |       +-- <span class="d">auth/</span> [...nextauth]
+|   +-- <span class="d">components/</span>
+|   |   +-- <span class="d">canvas/</span>               <span class="cm"># Konva analysis canvas</span>
+|   |   |   +-- AnalysisCanvas.tsx
+|   |   |   +-- MeasurementOverlay.tsx
+|   |   +-- <span class="new">builder/</span>              <span class="cm"># NEW: Craft.js design builder</span>
+|   |   |   +-- DesignCanvas.tsx
+|   |   |   +-- ComponentLibrary.tsx
+|   |   |   +-- PropertyEditor.tsx
+|   |   |   +-- BuilderToolbar.tsx
+|   |   |   +-- ScreenManager.tsx
+|   |   |   +-- LayerTree.tsx
+|   |   +-- <span class="new">prototype/</span>            <span class="cm"># NEW: Prototype mode</span>
+|   |   |   +-- PrototypePreview.tsx
+|   |   |   +-- InteractionPanel.tsx
+|   |   |   +-- TransitionPicker.tsx
+|   |   +-- <span class="new">inspect/</span>              <span class="cm"># NEW: Inspect mode</span>
+|   |   |   +-- InspectPanel.tsx
+|   |   |   +-- CodeSnippet.tsx
+|   |   |   +-- SpecViewer.tsx
+|   |   +-- <span class="new">nodes/</span>                <span class="cm"># NEW: Craft.js node components</span>
+|   |   |   +-- ButtonNode.tsx
+|   |   |   +-- InputNode.tsx
+|   |   |   +-- TextNode.tsx
+|   |   |   +-- ImageNode.tsx
+|   |   |   +-- CardNode.tsx
+|   |   |   +-- NavbarNode.tsx
+|   |   |   +-- ContainerNode.tsx
+|   |   +-- <span class="new">export/</span>               <span class="cm"># NEW: Code export</span>
+|   |   |   +-- ExportPanel.tsx
+|   |   |   +-- PreviewPanel.tsx
+|   |   |   +-- FormatPicker.tsx
+|   |   +-- panels/
+|   |   |   +-- ColorPalette.tsx
+|   |   |   +-- SpecsPanel.tsx
+|   |   +-- wireframe/ WireframeView.tsx
+|   +-- <span class="d">lib/</span>
+|   |   +-- ml-client.ts
+|   |   +-- cache.ts
+|   |   +-- db.ts
+|   |   +-- <span class="new">code-generator.ts</span>     <span class="cm"># NEW: JSON to code</span>
+|   |   +-- <span class="new">craft-helpers.ts</span>      <span class="cm"># NEW: Craft.js utilities</span>
+|   |   +-- <span class="new">auto-populate.ts</span>      <span class="cm"># NEW: AI data to canvas</span>
+|   +-- <span class="d">types/</span> analysis.ts
++-- <span class="d">ml-service/</span>                   <span class="cm"># Python FastAPI</span>
+|   +-- main.py
+|   +-- <span class="d">pipeline/</span>
+|   |   +-- preprocess.py, detect.py, ocr.py, colors.py, analyze.py
+|   +-- requirements.txt
++-- prisma/schema.prisma
++-- package.json
++-- .env.local</div>
+</div></section>
+
+<!-- BUILD ORDER -->
+<section id="build"><div class="wrap">
+<div class="tag">Section 17</div>
+<h2>Build Order</h2>
+<div class="build"><div class="bn">1</div><div><div class="bt">Project Setup</div><div class="bd">Next.js 14, Tailwind, shadcn/ui, react-konva, Craft.js, Framer Motion, Prisma. Python FastAPI. Shared types. .env config.</div></div></div>
+<div class="build"><div class="bn">2</div><div><div class="bt">Upload &amp; Analysis UI</div><div class="bd">Drag &amp; drop upload. Konva canvas with measurement overlays. Color palette, specs panel.</div></div></div>
+<div class="build"><div class="bn">3</div><div><div class="bt">ML Pipeline</div><div class="bd">OpenCV, PaddleOCR, K-Means, Florence-2, Gemini analysis. Redis caching.</div></div></div>
+<div class="build"><div class="bn">4</div><div><div class="bt">Design Builder</div><div class="bd">Craft.js canvas (grid + free-form). Component library. Property editor. Auto-populate from AI. Multi-screen. Layer tree.</div></div></div>
+<div class="build"><div class="bn">5</div><div><div class="bt">Prototype &amp; Inspect</div><div class="bd">Click interactions. Transitions. Phone preview. Inspect mode (CSS + React + Android code). Share URLs.</div></div></div>
+<div class="build"><div class="bn">6</div><div><div class="bt">Code Export</div><div class="bd">React + Tailwind (Gemini). Vue + Tailwind (Gemini). HTML/CSS (client-side). Jetpack Compose (Gemini). Kotlin/XML (Gemini). Sandpack preview. Download .zip.</div></div></div>
+<div class="build"><div class="bn">7</div><div><div class="bt">Polish &amp; Ship</div><div class="bd">Error handling. Responsive design. Sentry. Umami. Animations. Wireframe generator. Accessibility audit.</div></div></div>
+</div></section>
+
+<!-- COST -->
+<section id="cost"><div class="wrap">
+<div class="tag">Section 18</div>
+<h2>Cost Analysis</h2>
+<div class="stats">
+<div class="stat"><div class="val">$0.00</div><div class="lbl">Monthly Cost</div></div>
+<div class="stat"><div class="val">$0.00</div><div class="lbl">Per Analysis</div></div>
+<div class="stat"><div class="val">$0.00</div><div class="lbl">Per Export</div></div>
+<div class="stat"><div class="val">1,500+</div><div class="lbl">Free AI Calls/Day</div></div>
+</div>
+
+<h3>Savings vs Paid Tools</h3>
+<div class="tw2"><table>
+<thead><tr><th>Tool</th><th>Our Equivalent</th><th>Their Cost</th><th>Our Cost</th></tr></thead>
+<tbody>
+<tr><td>Visily Pro</td><td>Full feature parity</td><td>$15-30/mo</td><td style="color:var(--g);font-weight:700">$0</td></tr>
+<tr><td>Locofy</td><td>Design-to-code export</td><td>$30+/mo</td><td style="color:var(--g);font-weight:700">$0</td></tr>
+<tr><td>Claude API</td><td>Gemini Flash (free)</td><td>$0.015/img</td><td style="color:var(--g);font-weight:700">$0</td></tr>
+<tr><td>Figma</td><td>Craft.js builder</td><td>$15/mo</td><td style="color:var(--g);font-weight:700">$0</td></tr>
+<tr style="background:rgba(16,185,129,.08)"><td style="color:var(--g);font-weight:800">Total Savings</td><td></td><td>$60+/mo</td><td style="color:var(--g);font-weight:800;font-size:1rem">$0/mo</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- COMPARISON -->
+<section id="ref"><div class="wrap">
+<div class="tag">Section 19</div>
+<h2>Feature Comparison with Existing Tools</h2>
+<div class="tw2"><table>
+<thead><tr><th>Feature</th><th>Visily</th><th>Locofy</th><th>screenshot-to-code</th><th>Our Tool</th></tr></thead>
+<tbody>
+<tr><td>Screenshot Analysis</td><td>Basic</td><td>No</td><td>Basic</td><td style="color:var(--g);font-weight:700">Deep (colors, fonts, measurements)</td></tr>
+<tr><td>Design Builder</td><td>Yes</td><td>No</td><td>No</td><td style="color:var(--g)">Yes (Craft.js)</td></tr>
+<tr><td>Component Library</td><td>Yes</td><td>No</td><td>No</td><td style="color:var(--g)">Yes + AI-detected</td></tr>
+<tr><td>Prototype Mode</td><td>Yes</td><td>No</td><td>No</td><td style="color:var(--g)">Yes</td></tr>
+<tr><td>Inspect Mode</td><td>CSS only</td><td>No</td><td>No</td><td style="color:var(--g);font-weight:700">CSS + React + Android</td></tr>
+<tr><td>Code Export</td><td>React, Vue, HTML</td><td>React, HTML</td><td>React, HTML</td><td style="color:var(--g);font-weight:700">React + Vue + HTML + Compose + XML</td></tr>
+<tr><td>Android Export</td><td>No</td><td>No</td><td>No</td><td style="color:var(--g);font-weight:700">Jetpack Compose + Kotlin/XML</td></tr>
+<tr><td>Offline/Local AI</td><td>No</td><td>No</td><td>No</td><td style="color:var(--g);font-weight:700">Ollama (unlimited)</td></tr>
+<tr><td>API Access</td><td>No</td><td>No</td><td>No</td><td style="color:var(--g)">Yes (Phase 3)</td></tr>
+<tr><td>Free Tier</td><td>300 credits/mo</td><td>Trial only</td><td>Self-host only</td><td style="color:var(--g);font-weight:700">1,500/day + unlimited local</td></tr>
+<tr><td>Open Source</td><td>No</td><td>No</td><td>Yes (MIT)</td><td style="color:var(--g);font-weight:700">100% open stack</td></tr>
+</tbody></table></div>
+
+<h3>Research Sources</h3>
+<div class="g g2">
+<div class="cd"><h4>Free Tier Resources</h4><ul>
+<li><a href="https://free-for.dev/">free-for.dev</a></li>
+<li><a href="https://github.com/ripienaar/free-for-dev">GitHub: free-for-dev</a></li>
+<li><a href="https://ai.google.dev/">Google AI Studio (Gemini API)</a></li>
+</ul></div>
+<div class="cd"><h4>Key Open Source Projects</h4><ul>
+<li><a href="https://github.com/prevwong/craft.js">Craft.js</a> &mdash; Design builder framework</li>
+<li><a href="https://github.com/abi/screenshot-to-code">screenshot-to-code</a> &mdash; AI code gen</li>
+<li><a href="https://github.com/PaddlePaddle/PaddleOCR">PaddleOCR</a> &mdash; OCR engine</li>
+<li><a href="https://huggingface.co/microsoft/Florence-2-large">Florence-2</a> &mdash; UI detection</li>
+</ul></div>
+</div>
+</div></section>
+
+<footer>
+<p>Mobile Screenshot Analyzer &amp; Design Builder &mdash; Full Project Plan</p>
+<p style="margin-top:6px;color:#475569">Generated June 24, 2026 &middot; 100% Free Tier Stack &middot; $0.00/month</p>
+</footer>
+
+</body>
+</html>
