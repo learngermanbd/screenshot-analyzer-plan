@@ -16,9 +16,21 @@ function NodeWrapper({
   const {
     connectors: { connect, drag },
     isSelected,
+    props,
   } = useNode((state) => ({
     isSelected: state.events.selected,
+    props: state.data.props as Record<string, unknown>,
   }));
+
+  // Support absolute positioning from imported analysis data
+  const positionStyle: React.CSSProperties = {};
+  if (props._position === "absolute") {
+    positionStyle.position = "absolute";
+    positionStyle.top = props._top as string;
+    positionStyle.left = props._left as string;
+    positionStyle.width = props._width as string;
+    positionStyle.height = props._height as string;
+  }
 
   return (
     <div
@@ -30,7 +42,7 @@ function NodeWrapper({
         isSelected && "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-900",
         className
       )}
-      style={style}
+      style={{ ...positionStyle, ...style }}
     >
       {children}
     </div>

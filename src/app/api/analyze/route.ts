@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 function createMockAnalysis(buffer: ArrayBuffer, file: File, imageUrl: string | null): AnalysisResult {
   return {
     id: generateId(),
-    imageUrl: imageUrl || "",,
+    imageUrl: imageUrl || "",
     imageWidth: 390,
     imageHeight: 844,
     elements: [

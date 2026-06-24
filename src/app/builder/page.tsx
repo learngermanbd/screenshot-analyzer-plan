@@ -20,6 +20,7 @@ import {
   CraftRow,
   CraftDivider,
 } from "@/components/builder/CraftNodes";
+import CanvasLoader from "@/components/builder/CanvasLoader";
 
 export default function BuilderPage() {
   const [screens, setScreens] = useState<Screen[]>([
@@ -61,6 +62,7 @@ export default function BuilderPage() {
         CraftDivider,
       }}
     >
+      <CanvasLoader />
       <div className="flex min-h-[calc(100vh-4rem)]">
         {/* Left Sidebar - Component Library */}
         <aside className="w-64 shrink-0 border-r border-white/5 bg-slate-900/50 p-4">

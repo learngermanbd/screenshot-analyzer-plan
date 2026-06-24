@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import UploadZone from "@/components/upload/UploadZone";
 import AnalysisCanvas from "@/components/analysis/AnalysisCanvas";
 import ColorPalette from "@/components/analysis/ColorPalette";
@@ -18,6 +19,7 @@ export default function AnalyzePage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("analysis");
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const selectedElement = result?.elements.find((e) => e.id === selectedId) || null;
 
@@ -123,12 +125,17 @@ export default function AnalyzePage() {
             <span className="text-sm text-slate-500">
               {result.elements.length} elements detected
             </span>
-            <a
-              href="/builder"
+            <button
+              onClick={() => {
+                if (result?.elements) {
+                  sessionStorage.setItem("importedElements", JSON.stringify(result.elements));
+                  router.push("/builder");
+                }
+              }}
               className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
             >
               Open in Builder →
-            </a>
+            </button>
           </div>
         </div>
 
