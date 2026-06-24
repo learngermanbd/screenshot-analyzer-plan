@@ -6,7 +6,16 @@ import PrototypeCanvas, {
 } from "@/components/prototype/PrototypeCanvas";
 import InteractionPanel from "@/components/prototype/InteractionPanel";
 import ScreenManager, { type Screen } from "@/components/builder/ScreenManager";
-import type { CanvasNode } from "@/components/builder/DesignCanvas";
+interface CanvasNode {
+  id: string;
+  type: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  props: Record<string, unknown>;
+  style: Record<string, unknown>;
+}
 
 export default function PrototypePage() {
   const [screens, setScreens] = useState<Screen[]>([

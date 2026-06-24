@@ -1,15 +1,13 @@
 "use client";
 
+import { useEditor } from "@craftjs/core";
 import { cn } from "@/lib/utils";
 
 interface BuilderToolbarProps {
   mode: "freeform" | "grid";
   onModeChange: (mode: "freeform" | "grid") => void;
-  onUndo: () => void;
-  onRedo: () => void;
   zoom: number;
   onZoomChange: (zoom: number) => void;
-  onExport: () => void;
   onPrototype: () => void;
   className?: string;
 }
@@ -17,14 +15,16 @@ interface BuilderToolbarProps {
 export default function BuilderToolbar({
   mode,
   onModeChange,
-  onUndo,
-  onRedo,
   zoom,
   onZoomChange,
-  onExport,
   onPrototype,
   className,
 }: BuilderToolbarProps) {
+  const { actions, canUndo, canRedo } = useEditor((state, query) => ({
+    canUndo: query.history.canUndo(),
+    canRedo: query.history.canRedo(),
+  }));
+
   return (
     <div
       className={cn(
@@ -61,10 +61,18 @@ export default function BuilderToolbar({
       <div className="mx-1 h-6 w-px bg-white/10" />
 
       {/* Undo/Redo */}
-      <ToolbarButton onClick={onUndo} title="Undo">
+      <ToolbarButton
+        onClick={() => actions.history.undo()}
+        disabled={!canUndo}
+        title="Undo"
+      >
         ↩️
       </ToolbarButton>
-      <ToolbarButton onClick={onRedo} title="Redo">
+      <ToolbarButton
+        onClick={() => actions.history.redo()}
+        disabled={!canRedo}
+        title="Redo"
+      >
         ↪️
       </ToolbarButton>
 
@@ -98,12 +106,6 @@ export default function BuilderToolbar({
       >
         📱 Prototype
       </button>
-      <button
-        onClick={onExport}
-        className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-indigo-500"
-      >
-        📤 Export
-      </button>
     </div>
   );
 }
@@ -112,16 +114,24 @@ function ToolbarButton({
   children,
   onClick,
   title,
+  disabled = false,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   title: string;
+  disabled?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
       title={title}
-      className="rounded-lg p-1.5 text-sm transition hover:bg-white/10"
+      disabled={disabled}
+      className={cn(
+        "rounded-lg p-1.5 text-sm transition",
+        disabled
+          ? "cursor-not-allowed opacity-30"
+          : "hover:bg-white/10"
+      )}
     >
       {children}
     </button>

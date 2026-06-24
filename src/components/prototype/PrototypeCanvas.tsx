@@ -2,7 +2,18 @@
 
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import type { CanvasNode } from "@/components/builder/DesignCanvas";
+interface CanvasNode {
+  id: string;
+  type: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  props: Record<string, unknown>;
+  style: Record<string, unknown>;
+  children?: CanvasNode[];
+  hidden?: boolean;
+}
 
 export interface Interaction {
   id: string;

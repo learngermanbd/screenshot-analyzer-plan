@@ -28,16 +28,16 @@ function elementTypeToCraftType(
   type: DetectedElement["type"]
 ): string {
   const mapping: Record<string, string> = {
-    button: "ButtonNode",
-    input: "InputNode",
-    text: "TextNode",
-    image: "ImageNode",
-    icon: "IconNode",
-    card: "CardNode",
-    navbar: "NavbarNode",
-    container: "ContainerNode",
-    list: "ContainerNode",
-    unknown: "ContainerNode",
+    button: "CraftButton",
+    input: "CraftInput",
+    text: "CraftText",
+    image: "CraftImage",
+    icon: "CraftImage",
+    card: "CraftCard",
+    navbar: "CraftNavbar",
+    container: "CraftContainer",
+    list: "CraftContainer",
+    unknown: "CraftContainer",
   };
   return mapping[type] || "ContainerNode";
 }
@@ -55,7 +55,7 @@ export function createDefaultScreen(
     nodes: [
       {
         id: generateId(),
-        type: "ContainerNode",
+        type: "CraftContainer",
         displayName: "Root",
         props: { width, height, backgroundColor: "#ffffff" },
         children: [],
