@@ -20,11 +20,13 @@ export default function UploadZone({
   const handleFile = useCallback(
     (file: File) => {
       if (!file.type.startsWith("image/")) return;
+      // Revoke previous preview to prevent memory leak
+      if (preview) URL.revokeObjectURL(preview);
       const url = URL.createObjectURL(file);
       setPreview(url);
       onUpload(file);
     },
-    [onUpload]
+    [onUpload, preview]
   );
 
   const handleDrop = useCallback(

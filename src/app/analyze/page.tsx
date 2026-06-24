@@ -45,6 +45,8 @@ export default function AnalyzePage() {
       // Use local preview if storage returned no URL
       if (!data.imageUrl) {
         data.imageUrl = localPreview;
+      } else {
+        URL.revokeObjectURL(localPreview);
       }
       setResult(data);
     } catch (err) {
