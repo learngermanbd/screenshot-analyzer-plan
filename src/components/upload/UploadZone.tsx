@@ -92,6 +92,7 @@ export default function UploadZone({
           <label className="cursor-pointer rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500">
             Choose File
             <input
+              id="file-upload"
               type="file"
               accept="image/png,image/jpeg,image/webp"
               onChange={handleChange}
