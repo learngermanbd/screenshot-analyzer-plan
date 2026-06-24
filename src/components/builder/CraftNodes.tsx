@@ -1,9 +1,152 @@
 "use client";
 
-import { useNode, type UserComponent } from "@craftjs/core";
+import { useRef } from "react";
+import { useNode, useEditor, type UserComponent } from "@craftjs/core";
 import { cn } from "@/lib/utils";
 
-// ─── Shared wrapper for selection highlight ───────────────────────
+// ─── Resize Handles ───────────────────────────────────────────────
+const HANDLES = ["nw", "n", "ne", "e", "se", "s", "sw", "w"] as const;
+type HandleDirection = (typeof HANDLES)[number];
+
+function ResizeHandles({
+  domRef,
+}: {
+  domRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { id, props } = useNode((state) => ({
+    props: state.data.props as Record<string, unknown>,
+  }));
+  const { actions } = useEditor();
+
+  const handleMouseDown = (e: React.MouseEvent, direction: HandleDirection) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!domRef.current) return;
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startRect = domRef.current.getBoundingClientRect();
+    const startTop = parseFloat((props._top as string) || "0");
+    const startLeft = parseFloat((props._left as string) || "0");
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY;
+
+      actions.setProp(id, (p: Record<string, unknown>) => {
+        const isAbs = p._position === "absolute";
+
+        let newWidth = startRect.width;
+        let newHeight = startRect.height;
+        let newTop = startTop;
+        let newLeft = startLeft;
+
+        // Calculate deltas based on handle direction
+        if (direction.includes("e")) newWidth += deltaX;
+        if (direction.includes("s")) newHeight += deltaY;
+        if (direction.includes("w")) {
+          newWidth -= deltaX;
+          newLeft += deltaX;
+        }
+        if (direction.includes("n")) {
+          newHeight -= deltaY;
+          newTop += deltaY;
+        }
+
+        // Enforce minimum dimensions
+        newWidth = Math.max(15, newWidth);
+        newHeight = Math.max(15, newHeight);
+
+        // Update the appropriate props
+        if (isAbs) {
+          p._width = `${Math.round(newWidth)}px`;
+          p._height = `${Math.round(newHeight)}px`;
+          if (direction.includes("n")) p._top = `${Math.round(newTop)}px`;
+          if (direction.includes("w")) p._left = `${Math.round(newLeft)}px`;
+        } else {
+          p.width = `${Math.round(newWidth)}px`;
+          p.height = `${Math.round(newHeight)}px`;
+        }
+      });
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+  };
+
+  const getHandleStyle = (dir: HandleDirection): React.CSSProperties => {
+    const size = 8;
+    const offset = size / 2;
+    const base: React.CSSProperties = {
+      position: "absolute",
+      width: size,
+      height: size,
+      backgroundColor: "#6366f1",
+      border: "1.5px solid white",
+      borderRadius: "2px",
+      zIndex: 100,
+    };
+
+    // Position each handle
+    if (dir.includes("n")) base.top = -offset;
+    else if (dir.includes("s")) base.bottom = -offset;
+    else {
+      base.top = "50%";
+      base.transform = "translateY(-50%)";
+    }
+
+    if (dir.includes("w")) base.left = -offset;
+    else if (dir.includes("e")) base.right = -offset;
+    else if (!dir.includes("n") && !dir.includes("s")) {
+      base.left = "50%";
+      base.transform = "translateX(-50%)";
+    }
+
+    // Center handles on both axes for edge-only handles
+    if (dir === "n" || dir === "s") {
+      base.left = "50%";
+      base.transform = "translateX(-50%)";
+    }
+    if (dir === "e" || dir === "w") {
+      base.top = "50%";
+      base.transform = "translateY(-50%)";
+    }
+
+    // Cursor
+    const cursorMap: Record<HandleDirection, string> = {
+      nw: "nw-resize",
+      n: "n-resize",
+      ne: "ne-resize",
+      e: "e-resize",
+      se: "se-resize",
+      s: "s-resize",
+      sw: "sw-resize",
+      w: "w-resize",
+    };
+    base.cursor = cursorMap[dir];
+
+    return base;
+  };
+
+  return (
+    <>
+      {HANDLES.map((dir) => (
+        <div
+          key={dir}
+          style={getHandleStyle(dir)}
+          onMouseDown={(e) => handleMouseDown(e, dir)}
+        />
+      ))}
+    </>
+  );
+}
+
+// ─── Shared wrapper for selection highlight + resize ───────────────
 function NodeWrapper({
   children,
   className,
@@ -13,6 +156,8 @@ function NodeWrapper({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const domRef = useRef<HTMLDivElement>(null);
+
   const {
     connectors: { connect, drag },
     isSelected,
@@ -35,6 +180,7 @@ function NodeWrapper({
   return (
     <div
       ref={(ref) => {
+        domRef.current = ref;
         if (ref) connect(drag(ref));
       }}
       className={cn(
@@ -45,6 +191,7 @@ function NodeWrapper({
       style={{ ...positionStyle, ...style }}
     >
       {children}
+      {isSelected && <ResizeHandles domRef={domRef} />}
     </div>
   );
 }
