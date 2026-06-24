@@ -1,0 +1,25 @@
+# Core
+fastapi==0.115.6
+uvicorn==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.4
+
+# Image Processing
+Pillow==11.1.0
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+
+# Color Extraction
+scikit-learn==1.6.0
+
+# OCR (choose one - uncomment to install)
+# paddleocr==2.9.1        # Best quality, larger install
+# paddlepaddle==2.6.2     # Required by PaddleOCR
+# easyocr==1.7.2          # Good alternative
+
+# AI Analysis
+httpx==0.28.1
+
+# Optional: Florence-2 (requires GPU)
+# transformers==4.47.0
+# torch==2.5.1
