@@ -25,6 +25,9 @@ export default function AnalyzePage() {
     setIsAnalyzing(true);
     setError(null);
 
+    // Create local preview URL in case storage isn't configured
+    const localPreview = URL.createObjectURL(file);
+
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -39,9 +42,14 @@ export default function AnalyzePage() {
       }
 
       const data: AnalysisResult = await response.json();
+      // Use local preview if storage returned no URL
+      if (!data.imageUrl) {
+        data.imageUrl = localPreview;
+      }
       setResult(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
+      URL.revokeObjectURL(localPreview);
     } finally {
       setIsAnalyzing(false);
     }
