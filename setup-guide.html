@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Setup Guide - Screenshot Analyzer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--s:#1e293b;--s2:#334155;--b:#475569;--t:#f1f5f9;--td:#94a3b8;--a:#6366f1;--g:#10b981;--y:#f59e0b;--r:#ef4444;--bl:#3b82f6;--p:#a855f7;--c:#06b6d4;--r2:12px}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t);line-height:1.7}
+.hero{padding:60px 24px;text-align:center;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(16,185,129,.1))}
+h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#fff,var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.hero p{max-width:640px;margin:0 auto;color:var(--td);font-size:1.05rem}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--s2);padding:0 24px;overflow-x:auto;white-space:nowrap}
+nav a{display:inline-block;padding:8px 14px;font-size:.82rem;color:var(--td);text-decoration:none;border-radius:8px}
+nav a:hover{color:var(--t);background:var(--s)}
+.step{padding:48px 0;border-top:1px solid var(--s2)}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--p));color:#fff;font-weight:800;font-size:1rem;margin-bottom:12px}
+h2{font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:6px}
+h3{font-size:1.15rem;font-weight:700;color:var(--t);margin:24px 0 10px}
+h4{font-size:.95rem;font-weight:600;color:var(--t);margin:16px 0 8px}
+.tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;text-transform:uppercase;margin-bottom:8px}
+.tag-free{background:rgba(16,185,129,.15);color:var(--g);border:1px solid rgba(16,185,129,.3)}
+.tag-required{background:rgba(245,158,11,.15);color:var(--y);border:1px solid rgba(245,158,11,.3)}
+.tag-optional{background:rgba(59,130,246,.15);color:var(--bl);border:1px solid rgba(59,130,246,.3)}
+.desc{color:var(--td);font-size:.95rem;max-width:720px;margin-bottom:20px}
+.url{display:inline-block;background:var(--s);border:1px solid var(--s2);border-radius:8px;padding:8px 16px;font-family:Consolas,monospace;font-size:.85rem;color:var(--c);margin:8px 0;word-break:break-all}
+.url a{color:var(--c);text-decoration:none}
+.url a:hover{text-decoration:underline}
+.card{background:var(--s);border:1px solid var(--s2);border-radius:var(--r2);padding:20px;margin:12px 0}
+.card h4{margin-top:0}
+.info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);border-radius:var(--r2);padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--bl)}
+.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:var(--r2);padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--y)}
+.danger{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:var(--r2);padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--r)}
+.success{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:var(--r2);padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--g)}
+.ordered{counter-reset:step;list-style:none;padding:0}
+.ordered li{counter-increment:step;padding:10px 0 10px 44px;position:relative;border-bottom:1px solid var(--s2);font-size:.9rem}
+.ordered li:last-child{border-bottom:none}
+.ordered li::before{content:counter(step);position:absolute;left:0;top:10px;width:28px;height:28px;border-radius:50%;background:var(--s2);color:var(--t);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem}
+.code{background:#0d1117;border:1px solid var(--s2);border-radius:8px;padding:14px 18px;font-family:Consolas,monospace;font-size:.82rem;color:var(--td);overflow-x:auto;white-space:pre;margin:10px 0;line-height:1.6}
+.code .cmd{color:var(--g)}.code .val{color:var(--y)}.code .cm{color:#475569}
+.env-row{display:flex;gap:8px;align-items:center;padding:6px 0;font-family:Consolas,monospace;font-size:.82rem;flex-wrap:wrap}
+.env-key{background:var(--s2);padding:3px 8px;border-radius:4px;color:var(--c);min-width:200px}
+.env-val{color:var(--td)}
+.arrow{color:var(--a);font-weight:700;margin:0 4px}
+.vis{background:var(--s);border:1px solid var(--s2);border-radius:var(--r2);padding:24px;margin:16px 0;text-align:center}
+.vis-box{display:inline-block;background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:12px 20px;margin:6px;font-size:.82rem;color:var(--t);position:relative}
+.vis-arrow{display:inline-block;color:var(--a);font-size:1.2rem;margin:0 8px;vertical-align:middle}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.checklist{list-style:none;padding:0}
+.checklist li{padding:6px 0 6px 28px;position:relative;font-size:.88rem}
+.checklist li::before{content:"\2713";position:absolute;left:0;color:var(--g);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:.72rem;text-transform:uppercase;color:var(--td);border-bottom:1px solid var(--b)}
+td{padding:8px 12px;border-bottom:1px solid var(--s2);color:var(--td)}
+td:first-child{font-weight:600;color:var(--t)}
+a{color:var(--a);text-decoration:none}a:hover{text-decoration:underline}
+footer{padding:32px;text-align:center;color:var(--td);font-size:.8rem;border-top:1px solid var(--s2);margin-top:32px}
+@media(max-width:768px){.hero{padding:40px 16px}.step{padding:32px 0}.env-row{flex-direction:column}.env-key{min-width:auto;width:100%}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<h1>Setup Guide</h1>
+<p>Step-by-step instructions to set up all free accounts and services needed for the Mobile Screenshot Analyzer project. No credit card required.</p>
+</div>
+
+<nav>
+<a href="#overview">Overview</a>
+<a href="#supabase">Supabase</a>
+<a href="#vercel">Vercel</a>
+<a href="#gemini">Gemini API</a>
+<a href="#cloudflare">Cloudflare R2</a>
+<a href="#upstash">Upstash Redis</a>
+<a href="#huggingface">HF Spaces</a>
+<a href="#sentry">Sentry</a>
+<a href="#github">GitHub</a>
+<a href="#env">Environment</a>
+<a href="#verify">Verify</a>
+</nav>
+
+<!-- OVERVIEW -->
+<section id="overview" class="step"><div class="wrap">
+<h2>Accounts You Need to Create</h2>
+<p class="desc">All services below have free tiers. No credit card is required for any of them. Setup takes approximately 30-45 minutes total.</p>
+
+<div class="card">
+<h4>Services Overview</h4>
+<table>
+<thead><tr><th>Service</th><th>Purpose</th><th>Free Tier</th><th>CC Required?</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>Supabase</td><td>Database + Auth + Storage</td><td>500MB DB, 1GB files, 50K MAUs</td><td>No</td><td><span class="tag tag-required">Required</span></td></tr>
+<tr><td>Vercel</td><td>Frontend hosting</td><td>100GB bandwidth</td><td>No</td><td><span class="tag tag-required">Required</span></td></tr>
+<tr><td>Google AI Studio</td><td>Gemini API key (AI vision)</td><td>1,500 req/day</td><td>No</td><td><span class="tag tag-required">Required</span></td></tr>
+<tr><td>Cloudflare R2</td><td>Image storage</td><td>10GB, $0 egress</td><td>No</td><td><span class="tag tag-required">Required</span></td></tr>
+<tr><td>Upstash</td><td>Redis caching</td><td>500K cmds/month</td><td>No</td><td><span class="tag tag-optional">Optional</span></td></tr>
+<tr><td>Hugging Face</td><td>ML service hosting</td><td>16GB RAM, 2 vCPU</td><td>No</td><td><span class="tag tag-required">Required</span></td></tr>
+<tr><td>Sentry</td><td>Error monitoring</td><td>5K errors/month</td><td>No</td><td><span class="tag tag-optional">Optional</span></td></tr>
+<tr><td>GitHub</td><td>Code repository</td><td>Unlimited public repos</td><td>No</td><td><span class="tag tag-required">Required</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="vis">
+<h4 style="margin-bottom:16px">Setup Flow</h4>
+<div class="vis-box">GitHub</div><span class="vis-arrow">&rarr;</span>
+<div class="vis-box">Supabase</div><span class="vis-arrow">&rarr;</span>
+<div class="vis-box">Vercel</div><span class="vis-arrow">&rarr;</span>
+<div class="vis-box">Gemini API</div><span class="vis-arrow">&rarr;</span>
+<div class="vis-box">Cloudflare R2</div><span class="vis-arrow">&rarr;</span>
+<div class="vis-box">HF Spaces</div><span class="vis-arrow">&rarr;</span>
+<div class="vis-box" style="border-color:var(--g);color:var(--g)">Ready!</div>
+</div>
+</div></section>
+
+<!-- STEP 1: SUPABASE -->
+<section id="supabase" class="step"><div class="wrap">
+<div class="step-num">1</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-required">Required</span>
+<h2>Supabase — Database, Auth &amp; Storage</h2>
+<p class="desc">Supabase provides a PostgreSQL database, authentication, and file storage all in one free package.</p>
+
+<div class="url"><a href="https://supabase.com/" target="_blank">https://supabase.com</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>supabase.com</strong> and click <strong>"Start your project"</strong></li>
+<li>Sign up with your <strong>GitHub account</strong> (recommended) or email</li>
+<li>Once logged in, click <strong>"New Project"</strong> on the dashboard</li>
+<li>Fill in the project details:
+<div class="code"><span class="cm"># Project Settings</span>
+Organization:    <span class="val">Select or create an organization</span>
+Project Name:    <span class="val">screenshot-analyzer</span>
+Database Password: <span class="val">[Create a strong password - SAVE THIS!]</span>
+Region:          <span class="val">Choose closest to your users (e.g., US East, EU West)</span></div>
+</li>
+<li>Click <strong>"Create new project"</strong> and wait ~2 minutes for setup</li>
+<li>Once ready, go to <strong>Settings &rarr; API</strong> in the left sidebar</li>
+<li>Copy these values (you'll need them later):
+<div class="code"><span class="cm"># Copy these values</span>
+Project URL:     <span class="val">https://xxxxxxxx.supabase.co</span>
+Anon Key:        <span class="val">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+Service Role Key: <span class="val">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span></div>
+</li>
+</ol>
+
+<h3>What You Get (Free Tier)</h3>
+<div class="grid g2">
+<div class="card">
+<h4>Database</h4>
+<ul class="checklist">
+<li>500 MB PostgreSQL storage</li>
+<li>Dedicated database instance</li>
+<li>SQL editor in dashboard</li>
+<li>Auto-pauses after 1 week inactivity</li>
+</ul>
+</div>
+<div class="card">
+<h4>Auth &amp; Storage</h4>
+<ul class="checklist">
+<li>50,000 monthly active users</li>
+<li>Social logins (Google, GitHub)</li>
+<li>1 GB file storage</li>
+<li>2 projects max on free tier</li>
+</ul>
+</div>
+</div>
+
+<div class="warn"><strong>Important:</strong> Save your <strong>Database Password</strong> somewhere safe. You cannot retrieve it later. Also save the <strong>Service Role Key</strong> — it bypasses RLS policies (keep it secret).</div>
+
+<h3>Environment Variables to Save</h3>
+<div class="env-row"><span class="env-key">NEXT_PUBLIC_SUPABASE_URL</span><span class="arrow">&rarr;</span><span class="env-val">Your Project URL</span></div>
+<div class="env-row"><span class="env-key">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="arrow">&rarr;</span><span class="env-val">Your Anon Key</span></div>
+<div class="env-row"><span class="env-key">SUPABASE_SERVICE_ROLE_KEY</span><span class="arrow">&rarr;</span><span class="env-val">Your Service Role Key</span></div>
+<div class="env-row"><span class="env-key">DATABASE_URL</span><span class="arrow">&rarr;</span><span class="env-val">postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres</span></div>
+</div></section>
+
+<!-- STEP 2: VERCEL -->
+<section id="vercel" class="step"><div class="wrap">
+<div class="step-num">2</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-required">Required</span>
+<h2>Vercel — Frontend Hosting</h2>
+<p class="desc">Vercel is the best hosting platform for Next.js apps. The Hobby plan is free for personal/non-commercial use.</p>
+
+<div class="url"><a href="https://vercel.com/" target="_blank">https://vercel.com</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>vercel.com</strong> and click <strong>"Sign Up"</strong></li>
+<li>Sign up with your <strong>GitHub account</strong> (recommended)</li>
+<li>Once logged in, you'll see your dashboard</li>
+<li>Click <strong>"Add New..." &rarr; "Project"</strong></li>
+<li>Import your GitHub repo (e.g., <code>screenshot-analyzer-plan</code>)</li>
+<li>Configure the project:
+<div class="code"><span class="cm"># Project Settings</span>
+Framework Preset:  <span class="val">Next.js</span> (auto-detected)
+Root Directory:    <span class="val">./</span>
+Build Command:     <span class="val">npm run build</span>
+Output Directory:  <span class="val">.next</span></div>
+</li>
+<li>Add your <strong>Environment Variables</strong> (from Supabase, Gemini, etc.)</li>
+<li>Click <strong>"Deploy"</strong> — your site will be live in ~1 minute</li>
+</ol>
+
+<h3>What You Get (Hobby Plan)</h3>
+<div class="grid g2">
+<div class="card">
+<h4>Hosting</h4>
+<ul class="checklist">
+<li>100 GB bandwidth/month</li>
+<li>Automatic HTTPS/SSL</li>
+<li>Global CDN</li>
+<li>Custom domain support</li>
+<li>*.vercel.app subdomain</li>
+</ul>
+</div>
+<div class="card">
+<h4>Serverless Functions</h4>
+<ul class="checklist">
+<li>4 hours Active CPU/month</li>
+<li>100 GB-hours execution</li>
+<li>API routes work automatically</li>
+<li>Edge functions supported</li>
+</ul>
+</div>
+</div>
+
+<div class="warn"><strong>Limitation:</strong> Vercel Hobby is for <strong>non-commercial</strong> use only. If you plan to monetize, you'll need the Pro plan ($20/month). For development and testing, Hobby is perfect.</div>
+
+<div class="info"><strong>Tip:</strong> Vercel automatically deploys on every push to your <code>main</code> branch. No CI/CD setup needed.</div>
+</div></section>
+
+<!-- STEP 3: GEMINI API -->
+<section id="gemini" class="step"><div class="wrap">
+<div class="step-num">3</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-required">Required</span>
+<h2>Google AI Studio — Gemini API Key</h2>
+<p class="desc">The Gemini API powers our AI vision analysis and code generation. Google AI Studio provides a free tier with 1,500 requests per day — no credit card required.</p>
+
+<div class="url"><a href="https://aistudio.google.com/" target="_blank">https://aistudio.google.com</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>aistudio.google.com</strong></li>
+<li>Sign in with your <strong>Google account</strong></li>
+<li>Click <strong>"Get API key"</strong> in the left sidebar</li>
+<li>Click <strong>"Create API key"</strong></li>
+<li>Select or create a <strong>Google Cloud project</strong> (it will create one automatically if you don't have one)</li>
+<li>Copy the API key:
+<div class="code"><span class="cm"># Your API key looks like this</span>
+AIzaSy...xxxxxxxxxxxxxxxxxxxxxx</div>
+</li>
+</ol>
+
+<div class="danger"><strong>Security:</strong> Never share your API key publicly or commit it to GitHub. Always use environment variables.</div>
+
+<h3>Free Tier Limits</h3>
+<div class="card">
+<table>
+<thead><tr><th>Model</th><th>Rate Limit</th><th>Daily Limit</th><th>Vision?</th><th>JSON Output?</th></tr></thead>
+<tbody>
+<tr><td>Gemini 2.0 Flash</td><td>15 RPM</td><td>1,500 RPD</td><td>Yes</td><td>Yes (native)</td></tr>
+<tr><td>Gemini 1.5 Flash</td><td>15 RPM</td><td>1,500 RPD</td><td>Yes</td><td>Yes</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="warn"><strong>Privacy Note:</strong> On the free tier, your data (images, prompts) may be used by Google to improve their models. Do not upload sensitive or proprietary screenshots. For production with sensitive data, use Ollama locally or upgrade to the paid tier.</div>
+
+<h3>How to Use in Your App</h3>
+<div class="code"><span class="cm"># Install the SDK</span>
+<span class="cmd">npm install</span> @google/generative-ai
+
+<span class="cm"># In your code</span>
+<span class="kw">import</span> { GoogleGenerativeAI } <span class="kw">from</span> <span class="val">"@google/generative-ai"</span>;
+<span class="kw">const</span> genAI = <span class="kw">new</span> GoogleGenerativeAI(process.env.<span class="val">GEMINI_API_KEY</span>);
+<span class="kw">const</span> model = genAI.<span class="cmd">getGenerativeModel</span>({ model: <span class="val">"gemini-2.0-flash"</span> });</div>
+
+<h3>Environment Variable</h3>
+<div class="env-row"><span class="env-key">GEMINI_API_KEY</span><span class="arrow">&rarr;</span><span class="env-val">AIzaSy...your-key-here</span></div>
+</div></section>
+
+<!-- STEP 4: CLOUDFLARE R2 -->
+<section id="cloudflare" class="step"><div class="wrap">
+<div class="step-num">4</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-required">Required</span>
+<h2>Cloudflare R2 — Image Storage</h2>
+<p class="desc">R2 is S3-compatible object storage with <strong>zero egress fees</strong>. This is critical for an image-heavy app — other providers charge per GB downloaded.</p>
+
+<div class="url"><a href="https://developers.cloudflare.com/r2/" target="_blank">https://developers.cloudflare.com/r2</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>dash.cloudflare.com</strong> and <strong>sign up</strong> (or log in)</li>
+<li>From the dashboard, click <strong>"R2"</strong> in the left sidebar</li>
+<li>Click <strong>"Create bucket"</strong>
+<div class="code"><span class="cm"># Bucket Settings</span>
+Bucket Name:  <span class="val">screenshot-analyzer-images</span>
+Location:     <span class="val">Automatic (or choose nearest region)</span></div>
+</li>
+<li>After creating the bucket, go to <strong>"R2 Overview"</strong></li>
+<li>Click <strong>"Manage R2 API Tokens"</strong></li>
+<li>Click <strong>"Create API token"</strong>
+<div class="code"><span class="cm"># Token Settings</span>
+Token Name:    <span class="val">screenshot-analyzer-token</span>
+Permissions:   <span class="val">Object Read & Write</span>
+Specify:       <span class="val">Only the bucket you created</span>
+TTL:           <span class="val">None (no expiration)</span></div>
+</li>
+<li>Copy the credentials shown (shown only once!):
+<div class="code"><span class="cm"># Copy these values</span>
+Access Key ID:     <span class="val">xxxxxxxxxxxxxxxxxxxxxxxx</span>
+Secret Access Key: <span class="val">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+Endpoint:          <span class="val">https://&lt;ACCOUNT_ID&gt;.r2.cloudflarestorage.com</span></div>
+</li>
+</ol>
+
+<h3>What You Get (Free Tier)</h3>
+<div class="card">
+<ul class="checklist">
+<li>10 GB total storage</li>
+<li>Unlimited Class A operations (writes) — 1M/month free</li>
+<li>Unlimited Class B operations (reads) — 10M/month free</li>
+<li><strong>$0 egress fees</strong> (unlimited downloads — this is huge!)</li>
+<li>S3-compatible API (works with AWS SDK)</li>
+</ul>
+</div>
+
+<div class="info"><strong>Why R2 over AWS S3?</strong> AWS S3 charges $0.09/GB for egress. If your app serves 100GB of images/month, that's $9/month on S3 but $0 on R2.</div>
+
+<h3>Environment Variables</h3>
+<div class="env-row"><span class="env-key">R2_ACCESS_KEY_ID</span><span class="arrow">&rarr;</span><span class="env-val">Your Access Key ID</span></div>
+<div class="env-row"><span class="env-key">R2_SECRET_ACCESS_KEY</span><span class="arrow">&rarr;</span><span class="env-val">Your Secret Access Key</span></div>
+<div class="env-row"><span class="env-key">R2_ENDPOINT</span><span class="arrow">&rarr;</span><span class="env-val">https://&lt;ACCOUNT_ID&gt;.r2.cloudflarestorage.com</span></div>
+<div class="env-row"><span class="env-key">R2_BUCKET_NAME</span><span class="arrow">&rarr;</span><span class="env-val">screenshot-analyzer-images</span></div>
+</div></section>
+
+<!-- STEP 5: UPSTASH REDIS -->
+<section id="upstash" class="step"><div class="wrap">
+<div class="step-num">5</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-optional">Optional</span>
+<h2>Upstash Redis — Caching</h2>
+<p class="desc">Upstash provides serverless Redis for caching analysis results. This saves API costs by avoiding re-analysis of the same image.</p>
+
+<div class="url"><a href="https://upstash.com/" target="_blank">https://upstash.com</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>upstash.com</strong> and click <strong>"Sign Up"</strong></li>
+<li>Sign up with your <strong>GitHub account</strong></li>
+<li>From the dashboard, click <strong>"Create Database"</strong>
+<div class="code"><span class="cm"># Database Settings</span>
+Name:     <span class="val">screenshot-analyzer-cache</span>
+Type:     <span class="val">Regional</span>
+Region:   <span class="val">Choose closest (e.g., us-east-1)</span></div>
+</li>
+<li>After creation, click on the database name</li>
+<li>Scroll to <strong>"REST API"</strong> section and copy:
+<div class="code"><span class="cm"># Copy these values</span>
+UPSTASH_REDIS_REST_URL:   <span class="val">https://xx-xxx-xxx.upstash.io</span>
+UPSTASH_REDIS_REST_TOKEN: <span class="val">AYxxASxxxxxxxxxxxxxxxxxxxxxxxx</span></div>
+</li>
+</ol>
+
+<h3>What You Get (Free Tier)</h3>
+<div class="card">
+<ul class="checklist">
+<li>500,000 commands per month</li>
+<li>256 MB storage</li>
+<li>Global replication available</li>
+<li>No credit card required</li>
+</ul>
+</div>
+
+<h3>How Caching Saves Money</h3>
+<div class="code"><span class="cm"># Without cache: every upload = 1 Gemini API call</span>
+User uploads same image twice = <span class="val">2 API calls</span>
+
+<span class="cm"># With Redis cache: hash image, check cache first</span>
+User uploads same image twice = <span class="val">1 API call + 1 cache hit ($0)</span>
+
+<span class="cm"># 500K commands/month = ~16K unique analyses + cache lookups</span></div>
+
+<h3>Environment Variables</h3>
+<div class="env-row"><span class="env-key">UPSTASH_REDIS_REST_URL</span><span class="arrow">&rarr;</span><span class="env-val">Your REST URL</span></div>
+<div class="env-row"><span class="env-key">UPSTASH_REDIS_REST_TOKEN</span><span class="arrow">&rarr;</span><span class="env-val">Your REST Token</span></div>
+</div></section>
+
+<!-- STEP 6: HUGGING FACE -->
+<section id="huggingface" class="step"><div class="wrap">
+<div class="step-num">6</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-required">Required</span>
+<h2>Hugging Face Spaces — ML Service Hosting</h2>
+<p class="desc">Hugging Face Spaces hosts our Python ML microservice (FastAPI) with 16GB RAM and 2 vCPU — perfect for running OpenCV, PaddleOCR, and Florence-2.</p>
+
+<div class="url"><a href="https://huggingface.co/spaces" target="_blank">https://huggingface.co/spaces</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>huggingface.co</strong> and <strong>sign up</strong></li>
+<li>Once logged in, click your <strong>profile picture &rarr; "New Space"</strong></li>
+<li>Configure the Space:
+<div class="code"><span class="cm"># Space Settings</span>
+Space Name:       <span class="val">screenshot-analyzer-ml</span>
+License:          <span class="val">MIT</span>
+SDK:              <span class="val">Docker</span>
+Hardware:         <span class="val">CPU Basic (free)</span>
+Visibility:       <span class="val">Public</span></div>
+</li>
+<li>Click <strong>"Create Space"</strong></li>
+<li>You'll need to push your Python FastAPI code to this Space:
+<div class="code"><span class="cm"># Clone the Space repo</span>
+<span class="cmd">git clone</span> https://huggingface.co/spaces/your-username/screenshot-analyzer-ml
+<span class="cmd">cd</span> screenshot-analyzer-ml
+
+<span class="cm"># Add your FastAPI code + Dockerfile</span>
+<span class="cm"># Then push</span>
+<span class="cmd">git add</span> .
+<span class="cmd">git commit</span> -m "Add ML service"
+<span class="cmd">git push</span></div>
+</li>
+</ol>
+
+<h3>Dockerfile Template for FastAPI</h3>
+<div class="code"><span class="cm"># Dockerfile for Hugging Face Spaces</span>
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+<span class="cm"># Expose port 7860 (HF Spaces default)</span>
+EXPOSE 7860
+
+<span class="cm"># Run FastAPI with uvicorn</span>
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]</div>
+
+<h3>What You Get (Free Tier)</h3>
+<div class="card">
+<ul class="checklist">
+<li>16 GB RAM, 2 vCPU cores</li>
+<li>Docker support (install any Python packages)</li>
+<li>Git-based deployment (push to deploy)</li>
+<li>Automatic HTTPS endpoint</li>
+<li>Persistent storage available</li>
+</ul>
+</div>
+
+<h3>Environment Variable</h3>
+<div class="env-row"><span class="env-key">ML_SERVICE_URL</span><span class="arrow">&rarr;</span><span class="env-val">https://your-username-screenshot-analyzer-ml.hf.space</span></div>
+</div></section>
+
+<!-- STEP 7: SENTRY -->
+<section id="sentry" class="step"><div class="wrap">
+<div class="step-num">7</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-optional">Optional</span>
+<h2>Sentry — Error Monitoring</h2>
+<p class="desc">Sentry automatically captures and reports errors in your application. The free Developer plan is generous enough for small projects.</p>
+
+<div class="url"><a href="https://sentry.io/" target="_blank">https://sentry.io</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>sentry.io</strong> and click <strong>"Sign Up"</strong></li>
+<li>Sign up with your <strong>GitHub account</strong> or email</li>
+<li>Click <strong>"Create Project"</strong>
+<div class="code"><span class="cm"># Project Settings</span>
+Platform:    <span class="val">Next.js</span>
+Alert:       <span class="val">Recommended alerts</span>
+Project Name: <span class="val">screenshot-analyzer</span></div>
+</li>
+<li>Copy the DSN from the setup page:
+<div class="code"><span class="cm"># Your DSN looks like this</span>
+https://xxx@xxx.ingest.sentry.io/xxx</div>
+</li>
+</ol>
+
+<h3>What You Get (Developer Plan)</h3>
+<div class="card">
+<ul class="checklist">
+<li>5,000 errors per month</li>
+<li>5 GB logs</li>
+<li>5 million performance spans</li>
+<li>Team members: 1</li>
+<li>Data retention: 30 days</li>
+</ul>
+</div>
+
+<h3>Environment Variable</h3>
+<div class="env-row"><span class="env-key">SENTRY_DSN</span><span class="arrow">&rarr;</span><span class="env-val">https://xxx@xxx.ingest.sentry.io/xxx</span></div>
+</div></section>
+
+<!-- STEP 8: GITHUB -->
+<section id="github" class="step"><div class="wrap">
+<div class="step-num">8</div>
+<span class="tag tag-free">Free</span> <span class="tag tag-required">Required</span>
+<h2>GitHub — Code Repository</h2>
+<p class="desc">GitHub hosts your source code and integrates with Vercel for automatic deployments.</p>
+
+<div class="url"><a href="https://github.com/" target="_blank">https://github.com</a></div>
+
+<h3>Step-by-Step Setup</h3>
+<ol class="ordered">
+<li>Go to <strong>github.com</strong> and <strong>sign up</strong> (or log in)</li>
+<li>Click <strong>"+" &rarr; "New repository"</strong></li>
+<li>Configure the repo:
+<div class="code"><span class="cm"># Repository Settings</span>
+Name:         <span class="val">screenshot-analyzer</span>
+Description:  <span class="val">Mobile App Screenshot Analyzer & Design Builder</span>
+Visibility:   <span class="val">Public (free) or Private (also free)</span>
+Initialize:   <span class="val">Add a README file</span></div>
+</li>
+<li>Click <strong>"Create repository"</strong></li>
+</ol>
+
+<h3>GitHub Personal Access Token (for pushing)</h3>
+<ol class="ordered">
+<li>Go to <strong>Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens</strong></li>
+<li>Click <strong>"Generate new token"</strong></li>
+<li>Set permissions: <strong>Contents: Read and write, Metadata: Read-only</strong></li>
+<li>Select your repository</li>
+<li>Copy the token (shown only once!)</li>
+</ol>
+
+<div class="danger"><strong>Security:</strong> NEVER share your GitHub token or commit it to a repository. Use environment variables only. If a token is exposed, revoke it immediately at github.com/settings/tokens.</div>
+</div></section>
+
+<!-- ENV FILE -->
+<section id="env" class="step"><div class="wrap">
+<h2>Complete Environment File</h2>
+<p class="desc">After setting up all accounts, create a <code>.env.local</code> file in your project root with all the values:</p>
+
+<div class="code"><span class="cm"># ========================================</span>
+<span class="cm"># Screenshot Analyzer - Environment Variables</span>
+<span class="cm"># ========================================</span>
+
+<span class="cm"># --- Supabase (Required) ---</span>
+NEXT_PUBLIC_SUPABASE_URL=<span class="val">https://xxxxxxxx.supabase.co</span>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<span class="val">eyJhbGciOi...</span>
+SUPABASE_SERVICE_ROLE_KEY=<span class="val">eyJhbGciOi...</span>
+DATABASE_URL=<span class="val">postgresql://postgres:YOUR_PASSWORD@db.xxxxx.supabase.co:5432/postgres</span>
+
+<span class="cm"># --- Google Gemini AI (Required) ---</span>
+GEMINI_API_KEY=<span class="val">AIzaSy...your-key</span>
+
+<span class="cm"># --- Cloudflare R2 Storage (Required) ---</span>
+R2_ACCESS_KEY_ID=<span class="val">xxxxxxxxxxxxxxxx</span>
+R2_SECRET_ACCESS_KEY=<span class="val">xxxxxxxxxxxxxxxxxxxxxxxx</span>
+R2_ENDPOINT=<span class="val">https://&lt;ACCOUNT_ID&gt;.r2.cloudflarestorage.com</span>
+R2_BUCKET_NAME=<span class="val">screenshot-analyzer-images</span>
+
+<span class="cm"># --- Upstash Redis (Optional) ---</span>
+UPSTASH_REDIS_REST_URL=<span class="val">https://xx-xxx.upstash.io</span>
+UPSTASH_REDIS_REST_TOKEN=<span class="val">AYxxASxxxx</span>
+
+<span class="cm"># --- Hugging Face ML Service (Required) ---</span>
+ML_SERVICE_URL=<span class="val">https://your-username-screenshot-analyzer-ml.hf.space</span>
+
+<span class="cm"># --- Sentry (Optional) ---</span>
+SENTRY_DSN=<span class="val">https://xxx@xxx.ingest.sentry.io/xxx</span>
+
+<span class="cm"># --- NextAuth (for authentication) ---</span>
+NEXTAUTH_SECRET=<span class="val">generate-a-random-secret-here</span>
+NEXTAUTH_URL=<span class="val">http://localhost:3000</span></div>
+
+<div class="info"><strong>Tip:</strong> Use <code>openssl rand -base64 32</code> to generate a random secret for NEXTAUTH_SECRET.</div>
+</div></section>
+
+<!-- VERIFY -->
+<section id="verify" class="step"><div class="wrap">
+<h2>Verification Checklist</h2>
+<p class="desc">Run through this checklist to verify everything is set up correctly:</p>
+
+<div class="card">
+<h4>Account Verification</h4>
+<ul class="checklist">
+<li>Supabase project created and URL + keys copied</li>
+<li>Vercel account created and connected to GitHub</li>
+<li>Gemini API key generated from Google AI Studio</li>
+<li>Cloudflare R2 bucket created and API token generated</li>
+<li>Upstash Redis database created (if using caching)</li>
+<li>Hugging Face Space created for ML service</li>
+<li>Sentry project created and DSN copied (if using monitoring)</li>
+<li>GitHub repository created</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>Local Verification</h4>
+<div class="code"><span class="cm"># 1. Check Node.js is installed</span>
+<span class="cmd">node</span> --version    <span class="cm"># Should be v18+ </span>
+<span class="cmd">npm</span> --version     <span class="cm"># Should be v9+</span>
+
+<span class="cm"># 2. Check Python is installed (for ML service)</span>
+<span class="cmd">python3</span> --version  <span class="cm"># Should be v3.11+</span>
+<span class="cmd">pip</span> --version
+
+<span class="cm"># 3. Check Git is installed</span>
+<span class="cmd">git</span> --version
+
+<span class="cm"># 4. Test Supabase connection</span>
+<span class="cmd">npx</span> supabase db ping  <span class="cm"># Should connect successfully</span>
+
+<span class="cm"># 5. Test Gemini API</span>
+<span class="cmd">curl</span> "https://generativelanguage.googleapis.com/v1beta/models?key=YOUR_KEY"</div>
+</div>
+
+<div class="success"><strong>You're ready!</strong> Once all checks pass, you can start building the project. Run <code>npx create-next-app@latest screenshot-analyzer</code> to begin.</div>
+
+<h3>Quick Start Commands</h3>
+<div class="code"><span class="cm"># Create the Next.js project</span>
+<span class="cmd">npx create-next-app@latest</span> screenshot-analyzer --typescript --tailwind --eslint --app --src-dir
+
+<span class="cm">cd</span> screenshot-analyzer
+
+<span class="cm"># Install dependencies</span>
+<span class="cmd">npm install</span> @supabase/supabase-js @google/generative-ai craft.js react-konva \
+  framer-motion @upstash/redis @sentry/nextjs prisma @auth/prisma-adapter \
+  next-auth @aws-sdk/client-s3 sharp
+
+<span class="cm"># Initialize Prisma</span>
+<span class="cmd">npx prisma</span> init
+
+<span class="cm"># Copy your .env.local file into the project</span>
+<span class="cm"># Then start developing!</span>
+<span class="cmd">npm run</span> dev</div>
+</div></section>
+
+<footer>
+<p>Mobile Screenshot Analyzer &mdash; Setup Guide</p>
+<p style="margin-top:6px;color:#475569">All services are free tier. No credit card required. Estimated setup time: 30-45 minutes.</p>
+</footer>
+
+</body>
+</html>
