@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNode, useEditor, type UserComponent } from "@craftjs/core";
+import ContextMenu from "./ContextMenu";
 import { cn } from "@/lib/utils";
 
 // ─── Resize Handles ───────────────────────────────────────────────
@@ -157,8 +158,13 @@ function NodeWrapper({
   style?: React.CSSProperties;
 }) {
   const domRef = useRef<HTMLDivElement>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   const {
+    id,
     connectors: { connect, drag },
     isSelected,
     props,
@@ -166,6 +172,13 @@ function NodeWrapper({
     isSelected: state.events.selected,
     props: state.data.props as Record<string, unknown>,
   }));
+
+  // Right-click handler — show custom context menu
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenu({ x: e.clientX, y: e.clientY });
+  };
 
   // Support absolute positioning from imported analysis data
   const positionStyle: React.CSSProperties = {};
@@ -175,6 +188,11 @@ function NodeWrapper({
     positionStyle.left = props._left as string;
     positionStyle.width = props._width as string;
     positionStyle.height = props._height as string;
+  }
+
+  // Support z-index from bring-to-front / send-to-back
+  if (props._zIndex !== undefined) {
+    positionStyle.zIndex = Number(props._zIndex);
   }
 
   // Support hiding elements via layers panel
@@ -194,9 +212,18 @@ function NodeWrapper({
         className
       )}
       style={{ ...positionStyle, ...style }}
+      onContextMenu={handleContextMenu}
     >
       {children}
       {isSelected && <ResizeHandles domRef={domRef} />}
+      {contextMenu && (
+        <ContextMenu
+          nodeId={id}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
     </div>
   );
 }
