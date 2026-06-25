@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { DetectedElement } from "@/types/analysis";
 
@@ -18,17 +18,40 @@ export default function WireframeView({
   className,
 }: WireframeViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(600);
 
+  // ResizeObserver: track the container's true width so the canvas
+  // scales to fill available space instead of a hardcoded 600px.
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) {
+        // contentBoxSize already excludes padding in standards mode;
+        // max-w-full on the canvas prevents overflow regardless
+        const w = entry.contentBoxSize
+          ? entry.contentBoxSize[0].inlineSize
+          : entry.contentRect.width;
+        setContainerWidth(w);
+      }
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const maxW = 600;
+    const maxW = Math.max(200, containerWidth);
     const scale = Math.min(maxW / width, 1);
-    const displayW = width * scale;
-    const displayH = height * scale;
+    const displayW = Math.round(width * scale);
+    const displayH = Math.round(height * scale);
 
     canvas.width = displayW;
     canvas.height = displayH;
@@ -101,14 +124,18 @@ export default function WireframeView({
           ctx.strokeRect(x, y, w, h);
       }
     });
-  }, [elements, width, height]);
+  }, [elements, width, height, containerWidth]);
+
+  useEffect(() => {
+    draw();
+  }, [draw]);
 
   return (
-    <div className={cn("flex flex-col items-center", className)}>
+    <div ref={containerRef} className={cn("flex w-full flex-col items-center p-4", className)}>
       <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-slate-400">
         Wireframe
       </h3>
-      <canvas ref={canvasRef} className="rounded-xl border border-white/10 shadow-lg" />
+      <canvas ref={canvasRef} className="rounded-xl border border-white/10 shadow-lg max-w-full" />
     </div>
   );
 }
