@@ -25,7 +25,7 @@ export default function PrototypePage() {
   ]);
   const [activeScreenId, setActiveScreenId] = useState("screen-1");
   const [interactions, setInteractions] = useState<Interaction[]>([]);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [selectedNodeId, _setSelectedNodeId] = useState<string | null>(null);
 
   // Sample nodes for demo purposes
   const [screenNodes] = useState<Record<string, CanvasNode[]>>({

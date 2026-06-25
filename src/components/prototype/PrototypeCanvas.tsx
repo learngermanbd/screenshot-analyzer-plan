@@ -33,7 +33,7 @@ interface PrototypeCanvasProps {
 export default function PrototypeCanvas({
   screens,
   interactions,
-  onAddInteraction,
+  onAddInteraction: _onAddInteraction,
   className,
 }: PrototypeCanvasProps) {
   const [currentScreenId, setCurrentScreenId] = useState(

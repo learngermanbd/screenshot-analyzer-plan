@@ -73,10 +73,11 @@ export default function UploadZone({
     >
       {preview ? (
         <div className="relative w-full max-w-md">
+          {/* eslint-disable-next-line @next/next/no-img-element -- blob URL preview, next/image cannot optimize local blobs */}
           <img
             src={preview}
             alt="Uploaded screenshot"
-            className="rounded-xl border border-white/10 shadow-2xl"
+            className="w-full rounded-xl border border-white/10 shadow-2xl"
           />
           {isAnalyzing && (
             <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/60 backdrop-blur-sm">

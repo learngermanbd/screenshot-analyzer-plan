@@ -11,8 +11,7 @@ import ElementsList from "@/components/analysis/ElementsList";
 import AccessibilityAudit from "@/components/analysis/AccessibilityAudit";
 import ExportButtons from "@/components/analysis/ExportButtons";
 import InspectOverlay from "@/components/inspect/InspectOverlay";
-import LiveCodePreview from "@/components/inspect/LiveCodePreview";
-import type { AnalysisResult, DetectedElement } from "@/types/analysis";
+import type { AnalysisResult } from "@/types/analysis";
 
 type ViewMode = "analysis" | "inspect" | "accessibility" | "export";
 

@@ -131,7 +131,10 @@ export default function SnapGuides({ containerRef, zoom }: SnapGuidesProps) {
   const staticRectsRef = useRef<{ id: string; rect: Rect }[]>([]);
   const rafRef = useRef<number>(0);
   const zoomRef = useRef(zoom);
-  zoomRef.current = zoom;
+
+  useEffect(() => {
+    zoomRef.current = zoom;
+  });
 
   const findNodeElement = useCallback(
     (nodeId: string): HTMLElement | null => {

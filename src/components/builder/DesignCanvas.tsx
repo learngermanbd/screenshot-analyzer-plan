@@ -10,10 +10,7 @@ import {
   CraftText,
   CraftHeading,
   CraftInput,
-  CraftImage,
-  CraftCard,
   CraftNavbar,
-  CraftRow,
   CraftDivider,
 } from "./CraftNodes";
 

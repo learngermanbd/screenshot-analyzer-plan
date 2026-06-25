@@ -16,9 +16,8 @@ type Alignment =
   | "bottom";
 
 export default function AlignmentToolbar({ className }: AlignmentToolbarProps) {
-  const { actions, selected, nodes } = useEditor((state) => ({
+  const { actions, selected } = useEditor((state) => ({
     selected: Array.from(state.events.selected),
-    nodes: state.nodes,
   }));
 
   const selectedId = selected[0];

@@ -71,9 +71,7 @@ function buildProps(el: DetectedElement): Record<string, unknown> {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildSerializedState(elements: DetectedElement[]): Record<string, any> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nodes: Record<string, any> = {};
 
   // ROOT node — no parent field, isCanvas: true
@@ -126,8 +124,7 @@ function buildSerializedState(elements: DetectedElement[]): Record<string, any> 
 export default function CanvasLoader() {
   const { actions } = useEditor();
   const loaded = useRef(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [elementCount, setElementCount] = useState(0);
+  const [loadState, setLoadState] = useState({ isLoading: false, elementCount: 0 });
 
   useEffect(() => {
     if (loaded.current) return;
@@ -136,14 +133,14 @@ export default function CanvasLoader() {
     if (!data) return;
 
     loaded.current = true;
-    setIsLoading(true);
 
     try {
       const elements: DetectedElement[] = JSON.parse(data);
-      setElementCount(elements.length);
 
       // Use requestAnimationFrame to let the loading overlay paint first
       requestAnimationFrame(() => {
+        setLoadState({ isLoading: true, elementCount: elements.length });
+
         try {
           const serializedState = buildSerializedState(elements);
           actions.deserialize(serializedState);
@@ -152,17 +149,16 @@ export default function CanvasLoader() {
           console.error("Failed to load imported design:", err);
         } finally {
           // Brief delay so user sees the loading state transition
-          setTimeout(() => setIsLoading(false), 200);
+          setTimeout(() => setLoadState({ isLoading: false, elementCount: 0 }), 200);
         }
       });
     } catch (err) {
       console.error("Failed to parse imported elements:", err);
       sessionStorage.removeItem("importedElements");
-      setIsLoading(false);
     }
   }, [actions]);
 
-  if (!isLoading) return null;
+  if (!loadState.isLoading) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm">
@@ -176,7 +172,7 @@ export default function CanvasLoader() {
         <div className="text-center">
           <p className="text-sm font-semibold text-white">Importing design…</p>
           <p className="mt-1 text-xs text-slate-400">
-            Loading {elementCount} detected element{elementCount !== 1 ? "s" : ""} into the builder
+            Loading {loadState.elementCount} detected element{loadState.elementCount !== 1 ? "s" : ""} into the builder
           </p>
         </div>
 

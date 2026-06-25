@@ -12,11 +12,14 @@ export default function KeyboardShortcuts() {
 
   // Use refs to avoid re-registering listener on every render
   const selectedRef = useRef(selected);
-  selectedRef.current = selected;
   const actionsRef = useRef(actions);
-  actionsRef.current = actions;
   const queryRef = useRef(query);
-  queryRef.current = query;
+
+  useEffect(() => {
+    selectedRef.current = selected;
+    actionsRef.current = actions;
+    queryRef.current = query;
+  });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -175,7 +178,7 @@ export default function KeyboardShortcuts() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return null;
 }

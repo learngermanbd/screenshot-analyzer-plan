@@ -89,7 +89,7 @@ export default function AnalysisCanvas({
         ctx.fillText(dimText, x + w / 2 - 16, y + h + 14);
       }
     });
-  }, [image, elements, selectedId, canvasSize]);
+  }, [image, elements, selectedId, canvasSize, canvasRef]);
 
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect();
