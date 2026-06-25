@@ -43,7 +43,7 @@ export default function LiveCodePreview({
     return "vanilla" as const;
   }, [language]);
 
-  const sandpackFiles = useMemo(() => {
+  const sandpackFiles: Record<string, string> = useMemo(() => {
     if (language === "react-tailwind") {
       // Clean up the exported React code for Sandpack
       let cleanedCode = code;
@@ -88,9 +88,10 @@ export default function LiveCodePreview({
     }
 
     // HTML/CSS
-    return {
+    const htmlFiles: Record<string, string> = {
       "/index.html": code,
     };
+    return htmlFiles;
   }, [code, language]);
 
   const tabs: { id: Tab; label: string; icon: string }[] = canUseSandpack

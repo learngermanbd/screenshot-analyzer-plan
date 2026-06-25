@@ -27,8 +27,13 @@ export default function WireframeView({
 
     const maxW = 600;
     const scale = Math.min(maxW / width, 1);
-    canvas.width = width * scale;
-    canvas.height = height * scale;
+    const displayW = width * scale;
+    const displayH = height * scale;
+
+    canvas.width = displayW;
+    canvas.height = displayH;
+    canvas.style.width = `${displayW}px`;
+    canvas.style.height = `${displayH}px`;
 
     // White background
     ctx.fillStyle = "#f8fafc";
@@ -36,7 +41,7 @@ export default function WireframeView({
 
     elements.forEach((el) => {
       const x = el.bbox.x * scale;
-      const y = el.bbox.y * scaleY(el, scale);
+      const y = el.bbox.y * scale;
       const w = el.bbox.width * scale;
       const h = el.bbox.height * scale;
 
@@ -65,7 +70,7 @@ export default function WireframeView({
           break;
         case "text":
           ctx.fillStyle = "#475569";
-          ctx.font = `${el.styles?.fontSize ? el.styles.fontSize * scale : 12}px system-ui`;
+          ctx.font = `${el.styles?.fontSize ? el.styles.fontSize * scale : 10}px system-ui`;
           ctx.fillText(el.text || "Text", x, y + h * 0.7);
           break;
         case "image":
@@ -106,10 +111,6 @@ export default function WireframeView({
       <canvas ref={canvasRef} className="rounded-xl border border-white/10 shadow-lg" />
     </div>
   );
-}
-
-function scaleY(el: DetectedElement, scale: number): number {
-  return el.bbox.y * scale;
 }
 
 function roundRect(
