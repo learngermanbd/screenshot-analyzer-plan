@@ -1,6 +1,7 @@
 "use client";
 
 import { Frame, Element } from "@craftjs/core";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   CraftContainer,
@@ -30,6 +31,11 @@ export default function DesignCanvas({
   canvasHeight = 844,
   className,
 }: DesignCanvasProps) {
+  // Check sessionStorage synchronously via lazy initializer to avoid any flash
+  const [isImporting] = useState(() =>
+    typeof window !== "undefined" && !!sessionStorage.getItem("importedElements")
+  );
+
   return (
     <div className={cn("flex min-h-full items-start justify-center p-4", className)}>
       <div
@@ -46,59 +52,71 @@ export default function DesignCanvas({
         }}
       >
         <Frame>
-          <Element
-            is={CraftContainer}
-            canvas
-            padding="20px"
-            background="#0f172a"
-            minHeight="560px"
-            flexDirection="column"
-            gap="12px"
-          >
+          {isImporting ? (
             <Element
-              is={CraftNavbar}
-              title="My App"
-              background="#111827"
+              is={CraftContainer}
+              canvas
+              padding="0px"
+              background="#0f172a"
+              minHeight="100%"
+              flexDirection="column"
+              gap="0px"
             />
+          ) : (
             <Element
-              is={CraftHeading}
-              text="Welcome Back"
-              fontSize="28px"
-              color="#ffffff"
-            />
-            <Element
-              is={CraftText}
-              text="Sign in to continue"
-              fontSize="14px"
-              color="#94a3b8"
-            />
-            <Element
-              is={CraftInput}
-              placeholder="Email"
-              width="100%"
-            />
-            <Element
-              is={CraftInput}
-              placeholder="Password"
-              width="100%"
-            />
-            <Element
-              is={CraftButton}
-              text="Sign In"
-              background="#6366f1"
-              width="100%"
-            />
-            <Element
-              is={CraftDivider}
-              color="#334155"
-            />
-            <Element
-              is={CraftText}
-              text="Don't have an account? Sign up"
-              fontSize="13px"
-              color="#6366f1"
-            />
-          </Element>
+              is={CraftContainer}
+              canvas
+              padding="20px"
+              background="#0f172a"
+              minHeight="560px"
+              flexDirection="column"
+              gap="12px"
+            >
+              <Element
+                is={CraftNavbar}
+                title="My App"
+                background="#111827"
+              />
+              <Element
+                is={CraftHeading}
+                text="Welcome Back"
+                fontSize="28px"
+                color="#ffffff"
+              />
+              <Element
+                is={CraftText}
+                text="Sign in to continue"
+                fontSize="14px"
+                color="#94a3b8"
+              />
+              <Element
+                is={CraftInput}
+                placeholder="Email"
+                width="100%"
+              />
+              <Element
+                is={CraftInput}
+                placeholder="Password"
+                width="100%"
+              />
+              <Element
+                is={CraftButton}
+                text="Sign In"
+                background="#6366f1"
+                width="100%"
+              />
+              <Element
+                is={CraftDivider}
+                color="#334155"
+              />
+              <Element
+                is={CraftText}
+                text="Don't have an account? Sign up"
+                fontSize="13px"
+                color="#6366f1"
+              />
+            </Element>
+          )}
         </Frame>
       </div>
     </div>

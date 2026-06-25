@@ -160,6 +160,8 @@ export default function BuilderPage() {
             {rightTab === "device" && (
               <DeviceFrameSelector
                 activePreset={activeDevice}
+                canvasWidth={canvasSize.width}
+                canvasHeight={canvasSize.height}
                 onSelect={(preset: DevicePreset) => {
                   setActiveDevice(preset.name);
                   setCanvasSize({
