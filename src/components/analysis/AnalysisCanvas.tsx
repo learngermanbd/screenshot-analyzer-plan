@@ -9,6 +9,7 @@ interface AnalysisCanvasProps {
   elements: DetectedElement[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  canvasRef?: React.RefObject<HTMLCanvasElement | null>;
   className?: string;
 }
 
@@ -17,9 +18,11 @@ export default function AnalysisCanvas({
   elements,
   selectedId,
   onSelect,
+  canvasRef: externalCanvasRef,
   className,
 }: AnalysisCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const internalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = externalCanvasRef || internalCanvasRef;
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
 

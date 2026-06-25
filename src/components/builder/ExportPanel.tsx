@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useEditor } from "@craftjs/core";
 import { cn } from "@/lib/utils";
+import LiveCodePreview from "@/components/inspect/LiveCodePreview";
 import type { CodeExportFormat } from "@/types/analysis";
 
 interface ExportPanelProps {
@@ -102,29 +103,14 @@ export default function ExportPanel({
       </button>
 
       {exportedCode && (
-        <div className="mt-4 overflow-hidden rounded-xl border border-white/10">
-          <div className="flex items-center justify-between border-b border-white/10 bg-slate-800/50 px-3 py-2">
-            <span className="text-xs text-slate-400">{selected}</span>
-            <div className="flex gap-1">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(exportedCode);
-                }}
-                className="rounded px-2 py-1 text-[10px] text-slate-400 hover:bg-white/10 hover:text-white"
-              >
-                📋 Copy
-              </button>
-              <button
-                onClick={() => setExportedCode(null)}
-                className="rounded px-2 py-1 text-[10px] text-slate-400 hover:bg-white/10 hover:text-white"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-          <pre className="max-h-[300px] overflow-auto bg-slate-900 p-3 text-xs text-slate-300">
-            {exportedCode}
-          </pre>
+        <div className="mt-4">
+          <LiveCodePreview code={exportedCode} language={selected} />
+          <button
+            onClick={() => setExportedCode(null)}
+            className="mt-2 w-full rounded-lg border border-white/10 bg-slate-800/50 px-3 py-2 text-xs text-slate-400 transition hover:bg-slate-700/50 hover:text-white"
+          >
+            ✕ Close Preview
+          </button>
         </div>
       )}
     </div>

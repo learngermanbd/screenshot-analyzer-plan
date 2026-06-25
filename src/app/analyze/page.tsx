@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import UploadZone from "@/components/upload/UploadZone";
 import AnalysisCanvas from "@/components/analysis/AnalysisCanvas";
@@ -8,10 +8,13 @@ import ColorPalette from "@/components/analysis/ColorPalette";
 import SpecsPanel from "@/components/analysis/SpecsPanel";
 import WireframeView from "@/components/analysis/WireframeView";
 import ElementsList from "@/components/analysis/ElementsList";
+import AccessibilityAudit from "@/components/analysis/AccessibilityAudit";
+import ExportButtons from "@/components/analysis/ExportButtons";
 import InspectOverlay from "@/components/inspect/InspectOverlay";
+import LiveCodePreview from "@/components/inspect/LiveCodePreview";
 import type { AnalysisResult, DetectedElement } from "@/types/analysis";
 
-type ViewMode = "analysis" | "inspect";
+type ViewMode = "analysis" | "inspect" | "accessibility" | "export";
 
 export default function AnalyzePage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -20,6 +23,7 @@ export default function AnalyzePage() {
   const [viewMode, setViewMode] = useState<ViewMode>("analysis");
   const [error, setError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const router = useRouter();
 
   const selectedElement = result?.elements.find((e) => e.id === selectedId) || null;
@@ -111,17 +115,36 @@ export default function AnalyzePage() {
             }`}
           >
             🔍 Analysis
-          </button>
-          <button
-            onClick={() => setViewMode("inspect")}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-              viewMode === "inspect"
-                ? "bg-indigo-600 text-white"
-                : "bg-slate-800 text-slate-400 hover:text-white"
-            }`}
-          >
-            🔎 Inspect
-          </button>
+          </button>            <button
+              onClick={() => setViewMode("inspect")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                viewMode === "inspect"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-800 text-slate-400 hover:text-white"
+              }`}
+            >
+              🔎 Inspect
+            </button>
+            <button
+              onClick={() => setViewMode("accessibility")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                viewMode === "accessibility"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-800 text-slate-400 hover:text-white"
+              }`}
+            >
+              ♿ A11y
+            </button>
+            <button
+              onClick={() => setViewMode("export")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                viewMode === "export"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-800 text-slate-400 hover:text-white"
+              }`}
+            >
+              📤 Export
+            </button>
           <div className="ml-auto flex items-center gap-3">
             <span className="text-sm text-slate-500">
               {result.elements.length} elements detected
@@ -154,6 +177,7 @@ export default function AnalyzePage() {
           elements={result.elements}
           selectedId={selectedId}
           onSelect={setSelectedId}
+          canvasRef={canvasRef}
           className="mb-6"
         />
 
@@ -164,10 +188,34 @@ export default function AnalyzePage() {
         />
       </div>
 
-      {/* Right Sidebar - Specs / Inspect */}
+      {/* Right Sidebar - Specs / Inspect / Accessibility / Export */}
       <aside className="w-80 shrink-0 border-l border-white/5 bg-slate-900/50 p-4">
         {viewMode === "inspect" && selectedElement ? (
           <InspectOverlay element={selectedElement} />
+        ) : viewMode === "accessibility" ? (
+          <AccessibilityAudit elements={result.elements} colors={result.colors} />
+        ) : viewMode === "export" ? (
+          <div className="space-y-4">
+            <ExportButtons result={result} canvasRef={canvasRef} />
+            <div className="border-t border-white/5 pt-4">
+              <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-slate-400">
+                Quick Export
+              </h3>
+              <button
+                onClick={() => {
+                  if (result?.elements) {
+                    setIsExporting(true);
+                    sessionStorage.setItem("importedElements", JSON.stringify(result.elements));
+                    router.push("/builder");
+                  }
+                }}
+                disabled={isExporting}
+                className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-50"
+              >
+                Open in Builder →
+              </button>
+            </div>
+          </div>
         ) : (
           <SpecsPanel element={selectedElement} />
         )}

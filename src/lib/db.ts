@@ -1,27 +1,32 @@
-// Placeholder for Prisma client
-// After running `npx prisma generate`, uncomment and use:
+import { PrismaClient } from "@prisma/client";
 
-// import { PrismaClient } from "@prisma/client";
-//
-// const globalForPrisma = globalThis as unknown as {
-//   prisma: PrismaClient | undefined;
-// };
-//
-// export const prisma = globalForPrisma.prisma ?? new PrismaClient();
-//
-// if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-// Temporary in-memory store for development
-const store = new Map<string, unknown>();
-
-export const db = {
-  async get<T>(key: string): Promise<T | null> {
-    return (store.get(key) as T) ?? null;
-  },
-  async set(key: string, value: unknown): Promise<void> {
-    store.set(key, value);
-  },
-  async delete(key: string): Promise<void> {
-    store.delete(key);
-  },
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
+
+let prisma: PrismaClient;
+
+try {
+  prisma = globalForPrisma.prisma ?? new PrismaClient();
+  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+} catch {
+  // Fallback for development without DATABASE_URL configured
+  // The app will work with in-memory/API-only mode
+  console.warn(
+    "Prisma client could not be initialized. DATABASE_URL may not be set."
+  );
+  // Create a no-op proxy that returns null for all queries
+  prisma = new Proxy({} as PrismaClient, {
+    get: (_, prop) => {
+      if (prop === "$connect") return () => Promise.resolve();
+      if (prop === "$disconnect") return () => Promise.resolve();
+      return () => {
+        throw new Error(
+          "Database not configured. Set DATABASE_URL in .env.local"
+        );
+      };
+    },
+  });
+}
+
+export { prisma };
