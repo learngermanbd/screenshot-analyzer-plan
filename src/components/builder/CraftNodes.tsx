@@ -177,6 +177,11 @@ function NodeWrapper({
     positionStyle.height = props._height as string;
   }
 
+  // Support hiding elements via layers panel
+  if (props._hidden) {
+    positionStyle.display = "none";
+  }
+
   return (
     <div
       ref={(ref) => {

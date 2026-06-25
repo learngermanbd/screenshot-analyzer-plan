@@ -8,6 +8,8 @@ interface BuilderToolbarProps {
   onModeChange: (mode: "freeform" | "grid") => void;
   zoom: number;
   onZoomChange: (zoom: number) => void;
+  canvasWidth?: number;
+  canvasHeight?: number;
   onPrototype: () => void;
   className?: string;
 }
@@ -17,18 +19,29 @@ export default function BuilderToolbar({
   onModeChange,
   zoom,
   onZoomChange,
+  canvasWidth = 390,
+  canvasHeight = 844,
   onPrototype,
   className,
 }: BuilderToolbarProps) {
-  const { actions, canUndo, canRedo } = useEditor((state, query) => ({
+  const { actions, canUndo, canRedo, selected } = useEditor((state, query) => ({
     canUndo: query.history.canUndo(),
     canRedo: query.history.canRedo(),
+    selected: Array.from(state.events.selected),
   }));
+
+  const selectedId = selected[0];
+
+  const handleDelete = () => {
+    if (selectedId && selectedId !== "ROOT") {
+      actions.delete(selectedId);
+    }
+  };
 
   return (
     <div
       className={cn(
-        "flex items-center gap-1 rounded-xl border border-white/10 bg-slate-800/80 p-1 backdrop-blur-sm",
+        "flex flex-wrap items-center gap-1 rounded-xl border border-white/10 bg-slate-800/80 p-1 backdrop-blur-sm",
         className
       )}
     >
@@ -64,19 +77,110 @@ export default function BuilderToolbar({
       <ToolbarButton
         onClick={() => actions.history.undo()}
         disabled={!canUndo}
-        title="Undo"
+        title="Undo (Ctrl+Z)"
       >
         ↩️
       </ToolbarButton>
       <ToolbarButton
         onClick={() => actions.history.redo()}
         disabled={!canRedo}
-        title="Redo"
+        title="Redo (Ctrl+Y)"
       >
         ↪️
       </ToolbarButton>
 
       <div className="mx-1 h-6 w-px bg-white/10" />
+
+      {/* Element Actions */}
+      <ToolbarButton
+        onClick={handleDelete}
+        disabled={!selectedId || selectedId === "ROOT"}
+        title="Delete (Del)"
+      >
+        🗑️
+      </ToolbarButton>
+
+      <div className="mx-1 h-6 w-px bg-white/10" />
+
+      {/* Alignment (only when element selected) */}
+      {selectedId && selectedId !== "ROOT" && (
+        <>
+          <AlignmentButton
+            onClick={() => {
+              actions.setProp(selectedId, (p: Record<string, unknown>) => {
+                if (p._position === "absolute") p._left = "0px";
+              });
+            }}
+            title="Align Left"
+          >
+            ⫍
+          </AlignmentButton>
+          <AlignmentButton
+            onClick={() => {
+              actions.setProp(selectedId, (p: Record<string, unknown>) => {
+                if (p._position === "absolute") {
+                  const w = parseFloat((p._width as string) || "100");
+                  p._left = `${Math.round((canvasWidth - w) / 2)}px`;
+                }
+              });
+            }}
+            title="Center Horizontally"
+          >
+            ⊞
+          </AlignmentButton>
+          <AlignmentButton
+            onClick={() => {
+              actions.setProp(selectedId, (p: Record<string, unknown>) => {
+                if (p._position === "absolute") {
+                  const w = parseFloat((p._width as string) || "100");
+                  p._left = `${Math.round(canvasWidth - w)}px`;
+                }
+              });
+            }}
+            title="Align Right"
+          >
+            ⫎
+          </AlignmentButton>
+          <AlignmentButton
+            onClick={() => {
+              actions.setProp(selectedId, (p: Record<string, unknown>) => {
+                if (p._position === "absolute") p._top = "0px";
+              });
+            }}
+            title="Align Top"
+          >
+            ⫠
+          </AlignmentButton>
+          <AlignmentButton
+            onClick={() => {
+              actions.setProp(selectedId, (p: Record<string, unknown>) => {
+                if (p._position === "absolute") {
+                  const h = parseFloat((p._height as string) || "100");
+                  p._top = `${Math.round((canvasHeight - h) / 2)}px`;
+                }
+              });
+            }}
+            title="Center Vertically"
+          >
+            ⊟
+          </AlignmentButton>
+          <AlignmentButton
+            onClick={() => {
+              actions.setProp(selectedId, (p: Record<string, unknown>) => {
+                if (p._position === "absolute") {
+                  const h = parseFloat((p._height as string) || "100");
+                  p._top = `${Math.round(canvasHeight - h)}px`;
+                }
+              });
+            }}
+            title="Align Bottom"
+          >
+            ⫡
+          </AlignmentButton>
+
+          <div className="mx-1 h-6 w-px bg-white/10" />
+        </>
+      )}
 
       {/* Zoom */}
       <div className="flex items-center gap-1">
@@ -132,6 +236,26 @@ function ToolbarButton({
           ? "cursor-not-allowed opacity-30"
           : "hover:bg-white/10"
       )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function AlignmentButton({
+  children,
+  onClick,
+  title,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  title: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="rounded-md px-1.5 py-1 text-xs text-slate-400 transition hover:bg-white/10 hover:text-white"
     >
       {children}
     </button>

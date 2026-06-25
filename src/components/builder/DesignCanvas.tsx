@@ -18,28 +18,31 @@ import {
 interface DesignCanvasProps {
   mode: "freeform" | "grid";
   zoom: number;
+  canvasWidth?: number;
+  canvasHeight?: number;
   className?: string;
 }
 
 export default function DesignCanvas({
   mode,
   zoom,
+  canvasWidth = 390,
+  canvasHeight = 844,
   className,
 }: DesignCanvasProps) {
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-xl border border-white/10 bg-slate-900",
-        mode === "grid" &&
-          "bg-[length:16px_16px] bg-[image:radial-gradient(circle,rgba(255,255,255,.05)_1px,transparent_1px)]",
-        className
-      )}
-    >
+    <div className={cn("flex min-h-full items-start justify-center p-4", className)}>
       <div
+        className={cn(
+          "relative overflow-hidden rounded-xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/50",
+          mode === "grid" &&
+            "bg-[length:16px_16px] bg-[image:radial-gradient(circle,rgba(255,255,255,.05)_1px,transparent_1px)]"
+        )}
         style={{
+          width: canvasWidth,
+          height: canvasHeight,
           transform: `scale(${zoom / 100})`,
-          transformOrigin: "top left",
-          minHeight: "600px",
+          transformOrigin: "top center",
         }}
       >
         <Frame>
