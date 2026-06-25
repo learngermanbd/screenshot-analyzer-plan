@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEditor } from "@craftjs/core";
 import type { DetectedElement } from "@/types/analysis";
 
@@ -116,6 +116,8 @@ function buildSerializedState(elements: DetectedElement[]): Record<string, any> 
 export default function CanvasLoader() {
   const { actions } = useEditor();
   const loaded = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [elementCount, setElementCount] = useState(0);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -124,18 +126,57 @@ export default function CanvasLoader() {
     if (!data) return;
 
     loaded.current = true;
+    setIsLoading(true);
 
     try {
       const elements: DetectedElement[] = JSON.parse(data);
-      const serializedState = buildSerializedState(elements);
+      setElementCount(elements.length);
 
-      actions.deserialize(serializedState);
-
-      sessionStorage.removeItem("importedElements");
+      // Use requestAnimationFrame to let the loading overlay paint first
+      requestAnimationFrame(() => {
+        try {
+          const serializedState = buildSerializedState(elements);
+          actions.deserialize(serializedState);
+          sessionStorage.removeItem("importedElements");
+        } catch (err) {
+          console.error("Failed to load imported design:", err);
+        } finally {
+          // Brief delay so user sees the loading state transition
+          setTimeout(() => setIsLoading(false), 200);
+        }
+      });
     } catch (err) {
-      console.error("Failed to load imported design:", err);
+      console.error("Failed to parse imported elements:", err);
+      sessionStorage.removeItem("importedElements");
+      setIsLoading(false);
     }
   }, [actions]);
 
-  return null;
+  if (!isLoading) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm">
+      <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-slate-900/80 p-8 shadow-2xl">
+        {/* Animated spinner */}
+        <div className="relative h-12 w-12">
+          <div className="absolute inset-0 rounded-full border-2 border-slate-700" />
+          <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-indigo-500" />
+        </div>
+
+        <div className="text-center">
+          <p className="text-sm font-semibold text-white">Importing design…</p>
+          <p className="mt-1 text-xs text-slate-400">
+            Loading {elementCount} detected element{elementCount !== 1 ? "s" : ""} into the builder
+          </p>
+        </div>
+
+        {/* Progress dots animation */}
+        <div className="flex gap-1">
+          <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500" style={{ animationDelay: "0ms" }} />
+          <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500" style={{ animationDelay: "200ms" }} />
+          <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500" style={{ animationDelay: "400ms" }} />
+        </div>
+      </div>
+    </div>
+  );
 }

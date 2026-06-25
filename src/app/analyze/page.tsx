@@ -19,6 +19,7 @@ export default function AnalyzePage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("analysis");
   const [error, setError] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
   const router = useRouter();
 
   const selectedElement = result?.elements.find((e) => e.id === selectedId) || null;
@@ -128,13 +129,22 @@ export default function AnalyzePage() {
             <button
               onClick={() => {
                 if (result?.elements) {
+                  setIsExporting(true);
                   sessionStorage.setItem("importedElements", JSON.stringify(result.elements));
                   router.push("/builder");
                 }
               }}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+              disabled={isExporting}
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-wait"
             >
-              Open in Builder →
+              {isExporting ? (
+                <>
+                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Importing…
+                </>
+              ) : (
+                "Open in Builder →"
+              )}
             </button>
           </div>
         </div>
