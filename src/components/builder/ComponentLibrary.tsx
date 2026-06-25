@@ -15,6 +15,21 @@ import {
   CraftRow,
   CraftDivider,
 } from "./CraftNodes";
+import {
+  CraftToggle,
+  CraftCheckbox,
+  CraftRadio,
+  CraftChip,
+  CraftFAB,
+  CraftBottomNav,
+  CraftTopAppBar,
+  CraftProgress,
+  CraftBadge,
+  CraftListItem,
+  CraftSnackbar,
+  CraftSlider,
+} from "./AndroidNodes";
+import IconPackBrowser from "./IconPack";
 
 interface ComponentLibraryProps {
   className?: string;
@@ -55,12 +70,31 @@ const categories = [
       { type: "divider", label: "Divider", icon: "➖", element: <CraftDivider /> },
     ],
   },
+  {
+    name: "Android / Material",
+    icon: "🤖",
+    items: [
+      { type: "toggle", label: "Toggle", icon: "🔀", element: <CraftToggle /> },
+      { type: "checkbox", label: "Checkbox", icon: "☑️", element: <CraftCheckbox /> },
+      { type: "radio", label: "Radio", icon: "🔘", element: <CraftRadio /> },
+      { type: "chip", label: "Chip", icon: "🏷️", element: <CraftChip /> },
+      { type: "slider", label: "Slider", icon: "🎚️", element: <CraftSlider /> },
+      { type: "fab", label: "FAB", icon: "➕", element: <CraftFAB /> },
+      { type: "topappbar", label: "Top App Bar", icon: "📊", element: <CraftTopAppBar /> },
+      { type: "bottomnav", label: "Bottom Nav", icon: "📱", element: <CraftBottomNav /> },
+      { type: "listitem", label: "List Item", icon: "📋", element: <CraftListItem /> },
+      { type: "progress", label: "Progress", icon: "⏳", element: <CraftProgress /> },
+      { type: "badge", label: "Badge", icon: "🔴", element: <CraftBadge /> },
+      { type: "snackbar", label: "Snackbar", icon: "💬", element: <CraftSnackbar /> },
+    ],
+  },
 ];
 
 export default function ComponentLibrary({ className }: ComponentLibraryProps) {
   const { connectors } = useEditor();
   const [search, setSearch] = useState("");
   const [expandedCat, setExpandedCat] = useState<string | null>("Mobile UI");
+  const [showIcons, setShowIcons] = useState(false);
 
   const filtered = categories
     .map((cat) => ({
@@ -120,6 +154,19 @@ export default function ComponentLibrary({ className }: ComponentLibraryProps) {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Icon Pack toggle */}
+      <div className="mt-3">
+        <button
+          onClick={() => setShowIcons(!showIcons)}
+          className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs font-bold uppercase tracking-wider text-slate-500 transition hover:bg-white/5 hover:text-slate-300"
+        >
+          <span>🎨</span>
+          <span>Icons</span>
+          <span className="ml-auto">{showIcons ? "▾" : "▸"}</span>
+        </button>
+        {showIcons && <IconPackBrowser className="mt-2" />}
       </div>
 
       <div className="mt-3 rounded-lg border border-dashed border-white/10 bg-slate-800/20 p-3 text-center text-xs text-slate-600">

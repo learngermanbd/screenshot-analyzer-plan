@@ -25,6 +25,21 @@ import {
   CraftRow,
   CraftDivider,
 } from "@/components/builder/CraftNodes";
+import {
+  CraftToggle,
+  CraftCheckbox,
+  CraftRadio,
+  CraftChip,
+  CraftFAB,
+  CraftBottomNav,
+  CraftTopAppBar,
+  CraftProgress,
+  CraftBadge,
+  CraftListItem,
+  CraftSnackbar,
+  CraftSlider,
+} from "@/components/builder/AndroidNodes";
+import { CraftIcon } from "@/components/builder/IconPack";
 import CanvasLoader from "@/components/builder/CanvasLoader";
 
 export default function BuilderPage() {
@@ -68,6 +83,19 @@ export default function BuilderPage() {
         CraftNavbar,
         CraftRow,
         CraftDivider,
+        CraftToggle,
+        CraftCheckbox,
+        CraftRadio,
+        CraftChip,
+        CraftFAB,
+        CraftBottomNav,
+        CraftTopAppBar,
+        CraftProgress,
+        CraftBadge,
+        CraftListItem,
+        CraftSnackbar,
+        CraftSlider,
+        CraftIcon,
       }}
     >
       <CanvasLoader />
