@@ -1,8 +1,9 @@
 "use client";
 
 import { Frame, Element } from "@craftjs/core";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
+import SnapGuides from "./SnapGuides";
 import {
   CraftContainer,
   CraftButton,
@@ -31,6 +32,8 @@ export default function DesignCanvas({
   canvasHeight = 844,
   className,
 }: DesignCanvasProps) {
+  const canvasRef = useRef<HTMLDivElement>(null);
+
   // Check sessionStorage synchronously via lazy initializer to avoid any flash
   const [isImporting] = useState(() =>
     typeof window !== "undefined" && !!sessionStorage.getItem("importedElements")
@@ -39,6 +42,7 @@ export default function DesignCanvas({
   return (
     <div className={cn("flex min-h-full items-start justify-center p-4", className)}>
       <div
+        ref={canvasRef}
         className={cn(
           "relative overflow-hidden rounded-xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/50",
           mode === "grid" &&
@@ -51,6 +55,7 @@ export default function DesignCanvas({
           transformOrigin: "top center",
         }}
       >
+        <SnapGuides containerRef={canvasRef} zoom={zoom} />
         <Frame>
           {isImporting ? (
             <Element
